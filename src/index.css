@@ -1,3 +1,57 @@
-h1 {
-  color: rgb(202, 11, 11);
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: #FFF7ED;
+  font-family: 'Baloo Paaji 2', sans-serif;
+}
+
+/*** HEADER ***/
+
+header {
+  height: 100px;
+  display:flex;
+  align-items: center;
+  background-color: rgb(49, 47, 57);
+}
+
+header .site-logo {
+  color: rgb(245, 126, 0);
+  margin-right: auto;
+  text-transform: uppercase;
+  font-weight: 900;
+  font-size: 25px;
+}
+
+header a {
+  text-decoration: none;
+  color: #ffffff;
+  font-weight: 600;
+  padding: 5px 20px;
+}
+
+/*** FOOTER ***/
+
+
+
+/*** Domov ***/
+
+.home-container{ 
+  background-color: rgb(49, 47, 57);
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  min-height: 500px;
+  padding-left: 10%;
+  padding-top: 10%;
+}
+
+.home-container h1 {
+  color: white;
+  font-size: 60px;
+}
+
+.home-container p {
+  color: white;
+  font-size: 18px;
+  font-weight: 100;
 }
