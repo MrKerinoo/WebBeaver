@@ -1,7 +1,7 @@
 html, body {
   margin: 0;
   padding: 0;
-  background-color: #FFF7ED;
+  /*background-color: #14213d;*/
   font-family: 'Baloo Paaji 2', sans-serif;
 }
 
@@ -11,7 +11,7 @@ header {
   height: 100px;
   display:flex;
   align-items: center;
-  background-color: rgb(49, 47, 57);
+  background-color: #14213d;
 }
 
 header .site-logo {
@@ -31,27 +31,117 @@ header a {
 
 /*** FOOTER ***/
 
+/*** COMPONENTS ***/
 
+.card {
+  border-radius: 10px;
+  border: 1px solid #ffffff;
+  margin: 20px;
+  padding: 30px;
+  width: 300px;
+  height: 170px;
+}
 
-/*** Domov ***/
+.card-header {
+  display: flex;
+  align-items: center;
+}
 
-.home-container{ 
-  background-color: rgb(49, 47, 57);
+.card-icon {
+  color: rgb(245, 126, 0);
+  display: flex;
+  align-items: center;
+  margin-right: 5%;
+}
+
+.card h1 {
+  color: #ffffff;
+  text-transform: uppercase;
+  font-size: 20px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.card p {
+  color: #ffffff;
+  font-size: 17px;
+  text-align: left;
+}
+
+/*** DOMOV ***/
+
+.home-container { 
+  background-color: #14213d; 
   background-size: cover;
   display: flex;
   flex-direction: column;
   min-height: 500px;
-  padding-left: 10%;
-  padding-top: 10%;
+  justify-content: center;
+  align-items: center;
 }
 
 .home-container h1 {
   color: white;
-  font-size: 60px;
+  font-size: 80px;
+  text-transform: uppercase;
 }
 
 .home-container p {
   color: white;
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 100;
 }
+
+/*** SLUŽBY ***/
+
+.home-services {
+  background-color: #011627;
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  min-height: 500px;
+  justify-content: center;
+  align-items: center;
+}
+
+/*** NAŠE PROJEKTY ***/
+
+.home-projects { 
+  background-color: #14213d; 
+  background-size: cover;
+  display: flex;
+  flex-direction: column; /* Stack elements vertically */
+  min-height: 500px;
+  align-items: center; /* Center content horizontally */
+  padding-top: 30px;
+}
+
+.home-projects h1 {
+  color: white;
+  font-size: 50px;
+  text-transform: uppercase;
+  align-items: top;
+  margin-bottom: 75px;
+}
+
+/* -...............- */
+/* PREROBIT NA GRID  */
+/* -...............- */
+
+.home-projects-images {
+  display: flex;
+  gap: 100px;
+  margin: 30px;
+  align-items: center;
+}
+
+.home-projects-images a{
+  width: 33.33%;
+}
+
+.home-projects-images a img{
+  width: 100%;
+}
+
+
+
