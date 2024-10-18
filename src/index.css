@@ -9,7 +9,7 @@ html, body {
 
 header {
   height: 100px;
-  display:flex;
+  display: flex;
   align-items: center;
   background-color: #14213d;
 }
@@ -70,7 +70,7 @@ header a {
 
 /*** DOMOV ***/
 
-.home-container { 
+.main-container { 
   background-color: #14213d; 
   background-size: cover;
   display: flex;
@@ -80,13 +80,13 @@ header a {
   align-items: center;
 }
 
-.home-container h1 {
+.main-container h1 {
   color: white;
   font-size: 80px;
   text-transform: uppercase;
 }
 
-.home-container p {
+.main-container p {
   color: white;
   font-size: 20px;
   font-weight: 100;
@@ -98,7 +98,6 @@ header a {
   background-color: #011627;
   background-size: cover;
   display: flex;
-  flex-direction: column;
   min-height: 500px;
   justify-content: center;
   align-items: center;
@@ -110,9 +109,9 @@ header a {
   background-color: #14213d; 
   background-size: cover;
   display: flex;
-  flex-direction: column; /* Stack elements vertically */
+  flex-direction: column;
   min-height: 500px;
-  align-items: center; /* Center content horizontally */
+  align-items: center;
   padding-top: 30px;
 }
 
@@ -120,23 +119,20 @@ header a {
   color: white;
   font-size: 50px;
   text-transform: uppercase;
-  align-items: top;
   margin-bottom: 75px;
 }
 
-/* -...............- */
-/* PREROBIT NA GRID  */
-/* -...............- */
-
 .home-projects-images {
-  display: flex;
-  gap: 100px;
-  margin: 30px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   align-items: center;
+  justify-items: center;
 }
 
 .home-projects-images a{
-  width: 33.33%;
+  width: 70%;
+  display: flex;
+  justify-content: center;
 }
 
 .home-projects-images a img{
