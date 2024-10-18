@@ -5,7 +5,7 @@ export default function Header() {
   return (
     <header>
       <Link className="site-logo" to="/">
-        #WebBeaver
+        <img src="/src/assets/images/webBeaverLogo.png" alt="WebBeaver"/>
       </Link>
       <nav>
         <Link to="/onas">O nás</Link>

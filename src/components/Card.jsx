@@ -1,14 +1,13 @@
-
-export default function Card(props) {
+export default function Card({icon, heading, text}) {
     return (
         <div className="card">
 
             <div className="card-header">
-                {props.icon && <div className="card-icon">{props.icon}</div>}
-                <h1>{props.heading}</h1>
+                {icon && <div className="card-icon">{icon}</div>}
+                <h1>{heading}</h1>
             </div>
 
-            <p>{props.text}</p>
+            <p>{text}</p>
         </div>
     );
 }

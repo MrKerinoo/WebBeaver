@@ -15,11 +15,11 @@ header {
 }
 
 header .site-logo {
-  color: rgb(245, 126, 0);
   margin-right: auto;
-  text-transform: uppercase;
-  font-weight: 900;
-  font-size: 25px;
+}
+
+header .site-logo img {
+  width: 50%;
 }
 
 header a {
@@ -31,7 +31,31 @@ header a {
 
 /*** FOOTER ***/
 
-/*** COMPONENTS ***/
+/*** DOMOV ***/
+
+.main-container { 
+  background-color: #14213d; 
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  min-height: 500px;
+  justify-content: center;
+  align-items: center;
+}
+
+.main-container h1 {
+  color: white;
+  font-size: 80px;
+  text-transform: uppercase;
+}
+
+.main-container p {
+  color: white;
+  font-size: 20px;
+  font-weight: 100;
+}
+
+/*** CARD ***/
 
 .card {
   border-radius: 10px;
@@ -66,30 +90,6 @@ header a {
   color: #ffffff;
   font-size: 17px;
   text-align: left;
-}
-
-/*** DOMOV ***/
-
-.main-container { 
-  background-color: #14213d; 
-  background-size: cover;
-  display: flex;
-  flex-direction: column;
-  min-height: 500px;
-  justify-content: center;
-  align-items: center;
-}
-
-.main-container h1 {
-  color: white;
-  font-size: 80px;
-  text-transform: uppercase;
-}
-
-.main-container p {
-  color: white;
-  font-size: 20px;
-  font-weight: 100;
 }
 
 /*** SLUŽBY ***/
@@ -139,5 +139,60 @@ header a {
   width: 100%;
 }
 
+/*** KONTAKT ***/
 
+.contact-container {
+  background-color: #011627;
+  display: flex;
+  flex-direction: column;
+  min-height: 800px;
+  justify-content: center;
+  align-items: center;
+}
 
+.contact-container h1 {
+  color: white;
+  font-size: 50px;
+  text-transform: uppercase;
+  margin-bottom: 75px;
+}
+
+.contact-form{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  flex-direction: column;
+  grid-gap: 2rem 1rem;
+}
+
+.contact-textarea{
+  display: flex;
+  flex-direction: column;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+/*** InputField ***/
+
+.input-field{
+  padding: 20px 25px 20px;
+  width: 500px;
+  border-radius: 8px;
+}
+
+.input-textarea{
+  padding: 25px 25px 25px;
+  grid-column: span 2;
+  min-height: 100px;
+}
+
+.submit-button{
+  padding: 20px 25px 20px;
+  width: 300px;
+  border-radius: 8px;
+  background-color: #f57e00;
+  color: white;
+  font-size: 20px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+}
