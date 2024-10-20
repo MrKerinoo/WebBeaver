@@ -8,11 +8,9 @@ export default function Kontakt() {
   const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
 
+  
   const handleChange = (event) => {
-    const { name, email, phone, message } = event.target.value;
-    setName(name);
-    setEmail(email);
-    setPhone(phone);
+    const { message } = event.target;
     setMessage(message);
   };
 
@@ -22,9 +20,9 @@ export default function Kontakt() {
   };
 
   const fields = [
-    { name: "meno", value: name, placeHolder: "Meno" },
-    { name: "email", value: email, placeHolder: "Emailová adresa" },
-    { name: "telefon", value: phone, placeHolder: "Telefónne číslo" },
+    { name: "meno", value: name, placeHolder: "Meno", set: (e) => setName(e.target.value) },
+    { name: "email", value: email, placeHolder: "Emailová adresa", set: (e) => setEmail(e.target.value) },
+    { name: "telefon", value: phone, placeHolder: "Telefónne číslo", set: (e) => setPhone(e.target.value) },
   ];
 
   const fieldsItems = fields.map((field) => (
@@ -32,7 +30,7 @@ export default function Kontakt() {
       <InputField
         name={field.name}
         value={field.value}
-        onChange={handleChange}
+        onChange={(e) => field.set(e)}
         placeHolder={field.placeHolder}
       />
     </div>
