@@ -1,3 +1,4 @@
+import React from 'react'
 
 export default function InputField({ name, value, onChange, placeHolder }) {
   return (

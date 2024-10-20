@@ -16,10 +16,13 @@ header {
 
 header .site-logo {
   margin-right: auto;
+  max-width: 20%;
 }
 
+
 header .site-logo img {
-  width: 50%;
+  width: 100%;
+  height: auto;
 }
 
 header a {
@@ -28,6 +31,7 @@ header a {
   font-weight: 600;
   padding: 5px 20px;
 }
+
 
 /*** FOOTER ***/
 
@@ -60,7 +64,6 @@ header a {
 .card {
   border-radius: 10px;
   border: 1px solid #ffffff;
-  margin: 20px;
   padding: 30px;
   width: 300px;
   height: 170px;
@@ -92,14 +95,18 @@ header a {
   text-align: left;
 }
 
+
+
 /*** SLUŽBY ***/
 
 .home-services {
   background-color: #011627;
   background-size: cover;
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   min-height: 500px;
   justify-content: center;
+  justify-items: center;
   align-items: center;
 }
 
@@ -137,6 +144,65 @@ header a {
 
 .home-projects-images a img{
   width: 100%;
+}
+
+/*** O NÁS ***/
+
+.about-container{
+  background-color: #011627;
+  display: flex;
+  flex-direction: column;
+  min-height: 700px;
+  justify-content: center;
+  align-items: center;
+}
+
+.about-container h1 {
+  color: white;
+  font-size: 50px;
+  text-transform: uppercase;;
+  margin-bottom: 75px;
+}
+
+.person {
+  border-radius: 10px;
+  border: 1px solid #ffffff;
+  margin: 20px;
+  padding: 30px;
+  width: 250px;
+  height: 170px;
+}
+
+.persons-container{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 1rem 10rem;
+}
+
+.person-header {
+  display: flex;
+  align-items: center;
+}
+
+.person-icon {
+  color: rgb(245, 126, 0);
+  display: flex;
+  align-items: center;
+  margin-right: 10%;
+}
+
+.person h1 {
+  color: #ffffff;
+  text-transform: uppercase;
+  font-size: 50px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.person p {
+  color: #ffffff;
+  font-size: 17px;
+  text-align: center;
 }
 
 /*** KONTAKT ***/
@@ -195,4 +261,155 @@ header a {
   font-weight: 600;
   border: none;
   cursor: pointer;
+}
+
+/** LAPTOP **/
+
+@media (max-width: 1440px) {
+  .main-container h1 {
+   font-size: 70px;
+ }
+
+ .card{
+    width: 250px;
+    height: 150px;
+ }
+
+ .card h1 {
+   font-size: 17px;
+ }
+
+ .card p {
+   font-size: 15px;
+ }
+}
+
+/** TABLET **/
+
+@media (max-width: 768px) {
+  header .site-logo {
+    max-width: 30%;
+  }
+
+  .main-container h1 {
+    font-size: 50px;
+  }
+
+  .home-projects h1 {
+    font-size: 50px;
+  }
+
+  .card{
+    width: 150px;
+    height: 210px;
+  }
+
+  .card-icon {
+    margin-right: 10%;
+  }
+
+  .card h1 {
+    font-size: 15px;
+  }
+
+  .persons-container{
+    grid-gap: 1rem 3rem;
+  }
+
+  .input-field{
+    width: 200px;
+  }
+  
+  .submit-button{
+    padding: 10px 25px 10px;
+    width: 150px;
+  }
+}
+
+/** MOBIL L **/
+
+@media(max-width: 425px) {
+  header .site-logo {
+    max-width: 40%;
+  }
+
+  .main-container h1 {
+    font-size: 30px;
+  }
+
+  .home-projects h1 {
+    font-size: 30px;
+  }
+
+  .home-services {
+    grid-template-columns: 1fr;
+    grid-gap: 1rem;
+  }
+
+  .card{
+    width: 200px;
+    height: 125px;
+  }
+  
+  .card h1 {
+    font-size: 13px;
+  }
+
+  .home-projects-images {
+    grid-template-columns: 1fr;
+    grid-gap: 4rem;;
+  }
+
+  .persons-container{
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  .about-container h1 {
+    font-size: 40px;
+  }
+
+  .contact-container h1 {
+    font-size: 30px;
+  }
+
+  .contact-form{
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  .input-field{
+    width: 250px;
+  }
+  
+  .submit-button{
+    padding: 10px 25px 10px;
+    width: 150px;
+  }
+}
+
+/** MOBIL S **/
+
+@media(max-width: 320px) {
+  header .site-logo {
+    max-width: 30%;
+  }
+
+  .main-container h1 {
+    font-size: 20px;
+  }
+
+  .home-projects h1 {
+    font-size: 30px;
+  }
+
+  .main-container p {
+    font-size: 15px;
+  }
+
+  .person {
+    padding: 15px;
+  }
+
+  .input-field{
+    width: 200px;
+  }
 }

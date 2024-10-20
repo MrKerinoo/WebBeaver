@@ -1,3 +1,5 @@
+import React from 'react'
+
 export default function Card({icon, heading, text}) {
     return (
         <div className="card">

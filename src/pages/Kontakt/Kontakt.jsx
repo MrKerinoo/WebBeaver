@@ -42,6 +42,7 @@ export default function Kontakt() {
     <div>
       <div className="main-container">
         <h1>Kontakt</h1>
+        <p>Kontaktujte nás pre váš budúci projekt.</p>
       </div>
 
       <div className="contact-container">
