@@ -1,5 +1,4 @@
-import { Grid2 } from "@mui/material";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import Card from "/src/components/Card";
@@ -8,7 +7,21 @@ import DevicesIcon from "@mui/icons-material/Devices";
 import NewspaperIcon from "@mui/icons-material/Newspaper";
 import LightbulbIcon from "@mui/icons-material/Lightbulb";
 
+import axios from "axios";
+
 export default function Domov() {
+  const [array, setArray] = useState([]);
+
+  const fetchAPI = async () => {
+    const response = await axios.get("http://localhost:8080/api");
+    setArray(response.data.fruits);
+    console.log(response.data.fruits);
+  };
+
+  useEffect(() => {
+    fetchAPI();
+  }, []);
+
   const services = [
     {
       id: 1,
@@ -58,7 +71,12 @@ export default function Domov() {
   ));
 
   const projectsItems = projects.map((project) => (
-    <Link to={project.url} key={project.id} target="_blank" rel="noopener noreferrer">
+    <Link
+      to={project.url}
+      key={project.id}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
       <img src={project.image} alt={project.name} />
     </Link>
   ));
@@ -70,9 +88,7 @@ export default function Domov() {
         <p>Dizajn, tvorba a údržba</p>
       </div>
 
-      <div className="home-services">
-        {servicesItems}
-      </div>
+      <div className="home-services">{servicesItems}</div>
 
       <div className="home-projects">
         <h1>Naše projekty</h1>
