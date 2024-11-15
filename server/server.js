@@ -1,27 +1,18 @@
+/*
 require('dotenv').config();
 
 const express = require('express');
-const morgan = require('morgan');
 const cors = require('cors');
 const db = require('./db');
 const app = express();
 
 const port = process.env.PORT || 8080;
 
-//const corsOptions = {
-//  origin: ["http://localhost:5173"],
-//};
+const corsOptions = {
+  origin: ["http://localhost:5173"],
+};
 
-/* Middleware
 app.use(cors(corsOptions));
-app.use(morgan("dev"));
-
-app.use((req, res, next) => {
-  console.log("Middleware");
-  next();
-})
-  */
-
 app.use(express.json());
 
 // Get all Users
@@ -59,7 +50,7 @@ app.get("/api/v1/users/:id", async (req, res) => {
   }
 });
 
-// Create a User
+// Create a User 
 app.post("/api/v1/users", async (req, res) => {
   console.log(req.body);
 
@@ -79,7 +70,6 @@ app.post("/api/v1/users", async (req, res) => {
 });
 
 // Update a User
-
 app.put("/api/v1/users/:id", async (req, res) => {
   console.log(req.params.id);
   console.log(req.body);
@@ -101,7 +91,6 @@ app.put("/api/v1/users/:id", async (req, res) => {
 });
 
 // Delete a User
-
 app.delete("/api/v1/users/:id", async (req, res) => {
   console.log(req.params.id);
 
@@ -124,3 +113,5 @@ app.delete("/api/v1/users/:id", async (req, res) => {
 app.listen(port, () => {
   console.log(`Server is up and listening on port ${port}`);
 });
+
+*/

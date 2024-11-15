@@ -10,6 +10,7 @@ export default function Header() {
       <nav>
         <Link to="/onas">O nás</Link>
         <Link to="/kontakt">Kontakt</Link>
+        <Link to="/pouzivatelia">Používatelia</Link>
       </nav>
     </header>
   );
