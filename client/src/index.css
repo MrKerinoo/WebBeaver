@@ -1,8 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 html, body {
-  margin: 0;
-  padding: 0;
-  font-family: 'Baloo Paaji 2', sans-serif;
+    margin: 0;
+    padding: 0;
+    font-family: "Baloo Paaji 2", sans-serif;
 }
 
 /*** HEADER ***/
@@ -19,7 +22,6 @@ header .site-logo {
   max-width: 20%;
 }
 
-
 header .site-logo img {
   width: 100%;
   height: auto;
@@ -32,19 +34,12 @@ header a {
   padding: 5px 20px;
 }
 
-
 /*** FOOTER ***/
-
-
-
-
-
-
 
 /*** DOMOV ***/
 
-.main-container { 
-  background-color: #14213d; 
+.main-container {
+  background-color: #14213d;
   background-size: cover;
   display: flex;
   flex-direction: column;
@@ -101,8 +96,6 @@ header a {
   text-align: left;
 }
 
-
-
 /*** SLUŽBY ***/
 
 .home-services {
@@ -118,8 +111,8 @@ header a {
 
 /*** NAŠE PROJEKTY ***/
 
-.home-projects { 
-  background-color: #14213d; 
+.home-projects {
+  background-color: #14213d;
   background-size: cover;
   display: flex;
   flex-direction: column;
@@ -142,19 +135,19 @@ header a {
   justify-items: center;
 }
 
-.home-projects-images a{
+.home-projects-images a {
   width: 70%;
   display: flex;
   justify-content: center;
 }
 
-.home-projects-images a img{
+.home-projects-images a img {
   width: 100%;
 }
 
 /*** O NÁS ***/
 
-.about-container{
+.about-container {
   background-color: #011627;
   display: flex;
   flex-direction: column;
@@ -166,7 +159,7 @@ header a {
 .about-container h1 {
   color: white;
   font-size: 50px;
-  text-transform: uppercase;;
+  text-transform: uppercase;
   margin-bottom: 75px;
 }
 
@@ -179,7 +172,7 @@ header a {
   height: 170px;
 }
 
-.persons-container{
+.persons-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 1rem 10rem;
@@ -229,14 +222,14 @@ header a {
   margin-bottom: 75px;
 }
 
-.contact-form{
+.contact-form {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   flex-direction: column;
   grid-gap: 2rem 1rem;
 }
 
-.contact-textarea{
+.contact-textarea {
   display: flex;
   flex-direction: column;
   padding-top: 2rem;
@@ -245,19 +238,19 @@ header a {
 
 /*** InputField ***/
 
-.input-field{
+.input-field {
   padding: 20px 25px 20px;
   width: 500px;
   border-radius: 8px;
 }
 
-.input-textarea{
+.input-textarea {
   padding: 25px 25px 25px;
   grid-column: span 2;
   min-height: 100px;
 }
 
-.submit-button{
+.submit-button {
   padding: 20px 25px 20px;
   width: 300px;
   border-radius: 8px;
@@ -273,21 +266,21 @@ header a {
 
 @media (max-width: 1440px) {
   .main-container h1 {
-   font-size: 70px;
- }
+    font-size: 70px;
+  }
 
- .card{
+  .card {
     width: 250px;
     height: 150px;
- }
+  }
 
- .card h1 {
-   font-size: 17px;
- }
+  .card h1 {
+    font-size: 17px;
+  }
 
- .card p {
-   font-size: 15px;
- }
+  .card p {
+    font-size: 15px;
+  }
 }
 
 /** TABLET **/
@@ -305,7 +298,7 @@ header a {
     font-size: 50px;
   }
 
-  .card{
+  .card {
     width: 150px;
     height: 210px;
   }
@@ -318,15 +311,15 @@ header a {
     font-size: 15px;
   }
 
-  .persons-container{
+  .persons-container {
     grid-gap: 1rem 3rem;
   }
 
-  .input-field{
+  .input-field {
     width: 200px;
   }
-  
-  .submit-button{
+
+  .submit-button {
     padding: 10px 25px 10px;
     width: 150px;
   }
@@ -334,7 +327,7 @@ header a {
 
 /** MOBIL L **/
 
-@media(max-width: 425px) {
+@media (max-width: 425px) {
   header .site-logo {
     max-width: 40%;
   }
@@ -352,21 +345,21 @@ header a {
     grid-gap: 1rem;
   }
 
-  .card{
+  .card {
     width: 200px;
     height: 125px;
   }
-  
+
   .card h1 {
     font-size: 13px;
   }
 
   .home-projects-images {
     grid-template-columns: 1fr;
-    grid-gap: 4rem;;
+    grid-gap: 4rem;
   }
 
-  .persons-container{
+  .persons-container {
     grid-template-columns: repeat(1, 1fr);
   }
 
@@ -378,15 +371,15 @@ header a {
     font-size: 30px;
   }
 
-  .contact-form{
+  .contact-form {
     grid-template-columns: repeat(1, 1fr);
   }
 
-  .input-field{
+  .input-field {
     width: 250px;
   }
-  
-  .submit-button{
+
+  .submit-button {
     padding: 10px 25px 10px;
     width: 150px;
   }
@@ -394,7 +387,7 @@ header a {
 
 /** MOBIL S **/
 
-@media(max-width: 320px) {
+@media (max-width: 320px) {
   header .site-logo {
     max-width: 30%;
   }
@@ -415,7 +408,7 @@ header a {
     padding: 15px;
   }
 
-  .input-field{
+  .input-field {
     width: 200px;
   }
 }

@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-
-
 
 import Card from "/src/components/Card";
 
@@ -9,20 +7,8 @@ import DevicesIcon from "@mui/icons-material/Devices";
 import NewspaperIcon from "@mui/icons-material/Newspaper";
 import LightbulbIcon from "@mui/icons-material/Lightbulb";
 
-import axios from "axios";
-
 export default function Domov() {
-  const [array, setArray] = useState([]);
-
-  const fetchAPI = async () => {
-    const response = await axios.get("http://localhost:8080/api");
-    setArray(response.data.fruits);
-    console.log(response.data.fruits);
-  };
-
-  useEffect(() => {
-    fetchAPI();
-  }, []);
+  
 
   const services = [
     {
