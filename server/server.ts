@@ -1,6 +1,7 @@
 import { db } from "./db";
 import { AccountTable } from "./db/schema";
-import { asc, eq, sql } from "drizzle-orm";
+import { asc, eq} from "drizzle-orm";
+import { z } from "zod";
 import dotenv from "dotenv";
 import express, { Application } from "express";
 import cors from "cors";
@@ -66,6 +67,7 @@ app.post("/api/v1/users", async (req, res) => {
     const user = await db.insert(AccountTable).values({
       username: req.body.username,
       password: req.body.password,
+      role: req.body.role,
     });
 
     res.status(201).json({

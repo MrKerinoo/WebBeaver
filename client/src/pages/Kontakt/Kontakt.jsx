@@ -9,13 +9,13 @@ export default function Kontakt() {
   const [message, setMessage] = useState("");
 
   
-  const handleChange = (event) => {
-    const { message } = event.target;
+  const handleChange = (e) => {
+    const { message } = e.target;
     setMessage(message);
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const handleSubmit = (e) => {
+    e.preventDefault();
     console.log(name);
   };
 

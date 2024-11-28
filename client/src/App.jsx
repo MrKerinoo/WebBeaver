@@ -18,7 +18,7 @@ const queryClient = new QueryClient();
 
 export default function App() {
   return (
-    <QueryClientProvider client = {queryClient}>
+    <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <StrictMode>
           <Header />
@@ -38,9 +38,8 @@ export default function App() {
 
           <Footer />
         </StrictMode>
-        ,
       </BrowserRouter>
-      <ReactQueryDevtools/>
+      <ReactQueryDevtools />
     </QueryClientProvider>
   );
 }
