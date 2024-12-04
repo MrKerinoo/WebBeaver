@@ -33,7 +33,7 @@ export default function Pouzivatelia() {
   });
 
   const updateUserMutation = useMutation({
-    mutationFn: ({id, ...userData}) => updateUser(id, userData),
+    mutationFn: ({ id, ...userData }) => updateUser(id, userData),
     onSuccess: () => {
       queryClient.invalidateQueries(["users"]);
     },
@@ -149,10 +149,17 @@ export default function Pouzivatelia() {
 
   return (
     <div>
+      <div className="bg-primary py-20">
+        <div className="flex justify-center">
+          <div className="flex flex-col items-center text-white text-[50px]">
+            <h1>POUŽÍVATELIA</h1>
+          </div>
+        </div>
+      </div>
       <div className="px-4 pt-10 pb-20 sm:px-6 lg:px-8 bg-primary">
         <div className="sm:flex sm:items-center">
           <div className="sm:flex-auto">
-            <h1 className="text-base font-semibold text-white">Používatelia</h1>
+            <h1 className="text-base font-semibold text-white">Tabuľka používateľov</h1>
           </div>
           <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
             <button
