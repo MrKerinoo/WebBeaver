@@ -15,7 +15,9 @@ export default function Kontakt() {
       .min(3, { message: "Meno musí mať aspoň 3 znaky" })
       .max(20, { message: "Meno môže mať maximálne 20 znakov" }),
 
-    email: z.string().email(),
+    email: z
+    .string()
+    .email({message: "Emailová adresa musí byť platná."}),
 
     phone: z.string().regex(/^\+?\d{10,12}$/, {
       message: "Telefónne číslo musí byť platné a obsahovať 10-12 číslic.",
@@ -107,7 +109,7 @@ export default function Kontakt() {
             />
           </div>
 
-          <div>
+          <div className="flex justify-center">
             <button type="submit" className="submit-button">
               Odoslať
             </button>
