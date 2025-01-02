@@ -8,8 +8,6 @@ import NewspaperIcon from "@mui/icons-material/Newspaper";
 import LightbulbIcon from "@mui/icons-material/Lightbulb";
 
 export default function Domov() {
-  
-
   const services = [
     {
       id: 1,

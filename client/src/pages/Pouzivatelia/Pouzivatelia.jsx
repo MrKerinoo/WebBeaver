@@ -69,7 +69,7 @@ export default function Pouzivatelia() {
   };
   const handleDeleteClick = (id) => {
     const confirmDelete = window.confirm(
-      "Naozaj chcete odstrániť tohto používateľa?"
+      "Naozaj chcete odstrániť tohto používateľa?",
     );
     if (confirmDelete) {
       deleteUserMutation.mutate(id);
@@ -99,6 +99,7 @@ export default function Pouzivatelia() {
     }),
   });
 
+  // ZOBRAZOVAT ERRORY HNED POCAS PISANIA, NIE PO POTVRDENI
   const handleFormSubmit = (e) => {
     e.preventDefault();
 
@@ -125,14 +126,12 @@ export default function Pouzivatelia() {
         password: result.data.password,
         role: result.data.role,
       });
-      console.log("UPDATE");
     } else {
       createUserMutation.mutate({
         username: result.data.username,
         password: result.data.password,
         role: result.data.role,
       });
-      console.log("CREATE");
     }
 
     toggleModalCreate(null);
@@ -151,14 +150,14 @@ export default function Pouzivatelia() {
     <div>
       <div className="bg-primary px-10">
         <div className="flex justify-center">
-          <div className="flex flex-col items-center text-white text-[50px]">
+          <div className="flex flex-col items-center text-[50px] text-white">
             <h1>POUŽÍVATELIA</h1>
           </div>
         </div>
       </div>
-      <div className="px-4 pt-10 pb-20 sm:px-6 lg:px-8 bg-primary">
+      <div className="bg-primary px-4 pb-20 pt-10 sm:px-6 lg:px-8">
         <div className="px-10 sm:flex sm:items-center">
-          <div className="sm:flex-auto ">
+          <div className="sm:flex-auto">
             <h1 className="text-base font-semibold text-white">
               Tabuľka používateľov
             </h1>
@@ -196,20 +195,20 @@ export default function Pouzivatelia() {
 
                       <th
                         scope="col"
-                        className="pl-8 py-3.5 text-left text-sm font-semibold text-gray-900"
+                        className="py-3.5 pl-8 text-left text-sm font-semibold text-gray-900"
                       >
                         Rola
                       </th>
                       <th
                         scope="col"
-                        className="pl-4 py-3.5 text-left text-sm font-semibold text-gray-900"
+                        className="py-3.5 pl-4 text-left text-sm font-semibold text-gray-900"
                       >
                         Upaviť
                       </th>
 
                       <th
                         scope="col"
-                        className="pl-4 py-3.5 text-left text-sm font-semibold text-gray-900"
+                        className="py-3.5 pl-4 text-left text-sm font-semibold text-gray-900"
                       >
                         Odstrániť
                       </th>
@@ -218,21 +217,20 @@ export default function Pouzivatelia() {
                   <tbody className="divide-y divide-gray-200 bg-white">
                     {accounts.map((account) => (
                       <tr key={account.accountId}>
-                        <td className="whitespace-nowrap py-4 px-8 text-sm font-medium text-gray-900 sm:pl-6">
+                        <td className="whitespace-nowrap px-8 py-4 text-sm font-medium text-gray-900 sm:pl-6">
                           {account.username}
                         </td>
-                        <td className="whitespace-nowrap py-4 px-8 text-sm text-gray-500">
+                        <td className="whitespace-nowrap px-8 py-4 text-sm text-gray-500">
                           {account.password}
                         </td>
-                        <td className="whitespace-nowrap py-4 px-8 text-sm text-gray-500">
+                        <td className="whitespace-nowrap px-8 py-4 text-sm text-gray-500">
                           {account.role}
                         </td>
                         <td className="relative whitespace-nowrap py-4 text-right text-sm font-medium sm:pr-6">
                           <button
                             type="button"
                             disabled={deleteUserMutation.isLoading}
-                            className="block rounded-md bg-green-600 px-4 py-2 text-center text-sm font-semibold
-                           text-white shadow-sm hover:bg-white hover:text-secondary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                            className="block rounded-md bg-green-600 px-4 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-white hover:text-secondary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
                             onClick={() => handleUpdateClick(account)}
                           >
                             Upraviť
@@ -241,8 +239,7 @@ export default function Pouzivatelia() {
                         <td className="relative whitespace-nowrap py-4 text-right text-sm font-medium sm:pr-6">
                           <button
                             type="button"
-                            className="block rounded-md bg-red-600 px-4 py-2 text-center text-sm font-semibold
-                           text-white shadow-sm hover:bg-white hover:text-secondary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                            className="block rounded-md bg-red-600 px-4 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-white hover:text-secondary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
                             onClick={() => handleDeleteClick(account.accountId)}
                           >
                             Odstrániť
@@ -259,15 +256,15 @@ export default function Pouzivatelia() {
       </div>
 
       {modalCreate && (
-        <div className="fixed inset-0 flex justify-center items-center bg-black/30">
-          <div className="bg-primary border-2 border-secondary rounded-lg p-6 w-[400px]">
-            <div className="flex justify-between items-center pb-4">
+        <div className="fixed inset-0 flex items-center justify-center bg-black/30">
+          <div className="w-[400px] rounded-lg border-2 border-secondary bg-primary p-6">
+            <div className="flex items-center justify-between pb-4">
               <h1 className="text-white">
                 {selectedUser ? "Upraviť používateľa" : "Pridať používateľa"}
               </h1>
 
               <button onClick={() => toggleModalCreate(null)}>
-                <MdClose className="text-white text-[30px] hover:text-secondary" />
+                <MdClose className="text-[30px] text-white hover:text-secondary" />
               </button>
             </div>
             <form onSubmit={handleFormSubmit}>
@@ -279,7 +276,7 @@ export default function Pouzivatelia() {
                   value={username}
                   onChange={handleUsernameChange}
                   placeholder="Meno"
-                  className="block w-full rounded-md border-0 py-1.5 mb-5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-secondary sm:text-sm/6"
+                  className="mb-5 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-secondary sm:text-sm/6"
                 />
 
                 <input
@@ -289,24 +286,24 @@ export default function Pouzivatelia() {
                   value={password}
                   onChange={handlePasswordChange}
                   placeholder="Heslo"
-                  className="block w-full rounded-md border-0 py-1.5 mb-5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-secondary sm:text-sm/6"
+                  className="mb-5 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-secondary sm:text-sm/6"
                 />
 
                 <select
                   id="options"
                   value={selectedOption}
                   onChange={handleOptionChange}
-                  className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 mb-5 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-secondary sm:text-sm/6"
+                  className="mb-5 mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-secondary sm:text-sm/6"
                 >
                   <option value="ADMIN">ADMIN</option>
                   <option value="USER">USER</option>
                 </select>
               </div>
 
-              <div className="flex justify-center ">
+              <div className="flex justify-center">
                 <button
                   type="submit"
-                  className="rounded-md bg-secondary w-full px-3 py-2 text-center text-sm font-semibold text-white shadow-sm  hover:bg-secondary/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                  className="w-full rounded-md bg-secondary px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-secondary/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
                 >
                   {selectedUser ? "Upraviť" : "Pridať"}
                 </button>

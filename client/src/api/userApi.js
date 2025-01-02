@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from "axios";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -48,6 +48,15 @@ export const deleteUser = async (id) => {
     return response.data;
   } catch (error) {
     console.error(`Error deleting user with ID ${id}:`, error);
+    throw error;
+  }
+};
+
+export const loginUser = async (userData) => {
+  try {
+    const response = await axios.post(`${API_URL}/login`, userData);
+    return response.data;
+  } catch (error) {
     throw error;
   }
 };

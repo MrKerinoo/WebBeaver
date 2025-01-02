@@ -1,10 +1,11 @@
 import { db } from "./db";
 import { AccountTable } from "./db/schema";
-import { asc, eq}  from "drizzle-orm";
+import { asc, eq } from "drizzle-orm";
 import { z } from "zod";
 import dotenv from "dotenv";
 import express, { Application } from "express";
 import cors from "cors";
+import bcrypt from "bcrypt";
 
 // Load environment variables
 dotenv.config();
@@ -21,7 +22,6 @@ app.use(cors(corsOptions));
 app.use(express.json());
 
 //Validation Schema
-
 const userSchema = z.object({
   username: z
     .string()
@@ -38,6 +38,17 @@ const userSchema = z.object({
   }),
 });
 
+const loginSchema = z.object({
+  username: z
+    .string()
+    .min(3, { message: "Meno musí mať aspoň 3 znaky" })
+    .max(20, { message: "Meno môže mať maximálne 20 znakov" }),
+
+  password: z
+    .string()
+    .min(6, { message: "Heslo musí mať aspoň 6 znakov" })
+    .max(20, { message: "Heslo musí mať maximálne 20 znakov" }),
+});
 
 // Get all Users
 app.get("/api/v1/users", async (req, res) => {
@@ -80,6 +91,66 @@ app.get("/api/v1/users/:id", async (req, res) => {
   }
 });
 
+//Login a User
+app.post("/api/v1/users/login", async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
+    const result = loginSchema.safeParse({
+      username: username,
+      password: password,
+    });
+
+    if (!result.success) {
+      const errors = result.error.errors.map((err) => ({
+        path: err.path,
+        message: err.message,
+      }));
+      res.status(400).json({
+        status: "error",
+        message: "Nesprávne údaje",
+        errors,
+      });
+      return;
+    }
+
+    const user = await db.query.AccountTable.findFirst({
+      where: eq(AccountTable.username, result.data.username),
+    });
+
+    if (!user) {
+      res.status(401).json({
+        status: "error",
+        message: "Nesprávne meno",
+      });
+      return;
+    }
+
+    const isPasswordValid = await bcrypt.compare(
+      result.data.password,
+      user.password
+    );
+
+    if (!isPasswordValid) {
+      res.status(401).json({
+        status: "error",
+        message: "Nesprávne heslo",
+      });
+      return;
+    }
+
+    res.status(201).json({
+      status: "success",
+      //vymazat
+      data: {
+        user: user,
+      },
+    });
+  } catch (err) {
+    console.log(err);
+  }
+});
+
 // Create a User
 app.post("/api/v1/users", async (req, res) => {
   const { username, password, role } = req.body;
@@ -96,16 +167,19 @@ app.post("/api/v1/users", async (req, res) => {
         path: err.path,
         message: err.message,
       }));
-      res.status(500).json({
-        status: "fail",
+      res.status(400).json({
+        status: "error",
+        message: "Nesprávne údaje",
         errors,
       });
       return;
     }
 
+    const hashedPassword = await bcrypt.hash(result.data.password, 13);
+
     const user = await db.insert(AccountTable).values({
       username: result.data.username,
-      password: result.data.password,
+      password: hashedPassword,
       role: result.data.role,
     });
 
@@ -143,11 +217,13 @@ app.put("/api/v1/users/:id", async (req, res) => {
       return;
     }
 
+    const hashedPassword = await bcrypt.hash(result.data.password, 13);
+
     const user = await db
       .update(AccountTable)
       .set({
         username: result.data.username,
-        password: result.data.password,
+        password: hashedPassword,
         role: result.data.role,
       })
       .where(eq(AccountTable.accountId, parseInt(req.params.id)));
