@@ -1,10 +1,12 @@
-import axios from "axios";
+import api from "./api";
 
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = import.meta.env.VITE_APP_API_URL;
+
+// DELETE TRY CATCH AND ERRORS BEFORE RELEASE
 
 export const getUsers = async () => {
   try {
-    const response = await axios.get(`${API_URL}`);
+    const response = await api.get(`${API_URL}users`);
     return response.data;
   } catch (error) {
     console.error("Error fetching users:", error);
@@ -14,7 +16,7 @@ export const getUsers = async () => {
 
 export const getUserById = async (id) => {
   try {
-    const response = await axios.get(`${API_URL}/${id}`);
+    const response = await api.get(`${API_URL}users/${id}`);
     return response.data;
   } catch (error) {
     console.error(`Error fetching user with ID ${id}:`, error);
@@ -24,7 +26,7 @@ export const getUserById = async (id) => {
 
 export const createUser = async (userData) => {
   try {
-    const response = await axios.post(API_URL, userData);
+    const response = await api.post(`${API_URL}users/`, userData);
     return response.data;
   } catch (error) {
     console.error("Error creating user:", error);
@@ -34,7 +36,7 @@ export const createUser = async (userData) => {
 
 export const updateUser = async (id, userData) => {
   try {
-    const response = await axios.put(`${API_URL}/${id}`, userData);
+    const response = await api.put(`${API_URL}users/${id}`, userData);
     return response.data;
   } catch (error) {
     console.error(`Error updating user with ID ${id}:`, error);
@@ -44,19 +46,10 @@ export const updateUser = async (id, userData) => {
 
 export const deleteUser = async (id) => {
   try {
-    const response = await axios.delete(`${API_URL}/${id}`);
+    const response = await api.delete(`${API_URL}users/${id}`);
     return response.data;
   } catch (error) {
     console.error(`Error deleting user with ID ${id}:`, error);
-    throw error;
-  }
-};
-
-export const loginUser = async (userData) => {
-  try {
-    const response = await axios.post(`${API_URL}/login`, userData);
-    return response.data;
-  } catch (error) {
     throw error;
   }
 };

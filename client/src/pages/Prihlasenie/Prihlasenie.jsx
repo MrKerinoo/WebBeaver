@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { loginUser } from "../../api/userApi.js";
+import { loginUser } from "../../api/authApi.js";
 
 import { z } from "zod";
 

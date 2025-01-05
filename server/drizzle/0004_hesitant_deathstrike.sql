@@ -1,0 +1,1 @@
+ALTER TABLE "refresh_token" ALTER COLUMN "token" SET DATA TYPE varchar(1024);
