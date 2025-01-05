@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   getUsers,
@@ -6,11 +6,14 @@ import {
   updateUser,
   deleteUser,
 } from "../../api/userApi.js";
-import { set, z } from "zod";
+import { AuthContext } from "../../contexts/AuthContext.jsx";
+import { z } from "zod";
 
 import { MdClose } from "react-icons/md";
 
 export default function Pouzivatelia() {
+  const { user } = useContext(AuthContext);
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -148,6 +151,7 @@ export default function Pouzivatelia() {
 
   return (
     <div>
+      {console.log(user)}
       <div className="bg-primary px-10">
         <div className="flex justify-center">
           <div className="flex flex-col items-center text-[50px] text-white">

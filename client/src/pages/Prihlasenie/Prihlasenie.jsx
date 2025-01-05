@@ -1,12 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { loginUser } from "../../api/authApi.js";
+import { AuthContext } from "../../contexts/AuthContext.jsx";
 
 import { z } from "zod";
 
 export default function Prihlasenie() {
+  const { login } = useContext(AuthContext);
+
   const loginSchema = z.object({
     username: z
       .string()
@@ -29,6 +32,7 @@ export default function Prihlasenie() {
     onSuccess: (data) => {
       console.log("PRIHLASENY", data);
       alert("Prihlásenie prebehlo úspešne");
+      login();
       navigate("/pouzivatelia");
     },
     onError: (error) => {

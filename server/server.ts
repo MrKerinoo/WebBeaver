@@ -287,7 +287,7 @@ app.post("/api/auth/login", async (req, res) => {
 });
 
 //Get a new access token
-app.post("/api/auth/token", async (req, res) => {
+app.post("/api/auth/refresh-token", async (req, res) => {
   const refreshToken = req.cookies.refreshToken;
 
   if (refreshToken == null) {
@@ -316,7 +316,7 @@ app.post("/api/auth/token", async (req, res) => {
     (err: any, user: any) => {
       if (err) return res.status(403).json({ status: "error" });
 
-      const accessToken = generateAccessToken({ name: user.username });
+      const accessToken = generateAccessToken({ user });
 
       res.cookie("accessToken", accessToken, {
         httpOnly: true,
@@ -330,14 +330,29 @@ app.post("/api/auth/token", async (req, res) => {
   );
 });
 
-//Delete a refresh token
-app.delete("api/auth/logout", async (req, res) => {
-  const refreshToken = req.body.token;
+app.post(
+  "/api/auth/validate-token",
+  authenticateToken,
+  async (req: any, res) => {
+    const user = req.user;
+    res.status(200).json({
+      status: "success",
+      data: {
+        user: user,
+      },
+      message: "Token is valid",
+    });
+  }
+);
 
+//Delete a refresh token
+app.delete("/api/auth/logout", async (req, res) => {
+  const refreshToken = req.cookies.refreshToken;
+  console.log("REFRESH TOKEN", refreshToken);
   try {
     await db
       .delete(RefreshTokenTable)
-      .where(eq(RefreshTokenTable.refreshTokenId, refreshToken));
+      .where(eq(RefreshTokenTable.token, refreshToken));
 
     res.status(204).json({
       status: "success",
