@@ -1,13 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import Card from "/src/components/Card";
+import { useAuth } from "/src/hooks/useAuth";
 
 import DevicesIcon from "@mui/icons-material/Devices";
 import NewspaperIcon from "@mui/icons-material/Newspaper";
 import LightbulbIcon from "@mui/icons-material/Lightbulb";
 
 export default function Domov() {
+  const { loggedIn, user } = useAuth();
+
+  useEffect(() => {
+    console.log(user);
+  }, [loggedIn, user]);
+
   const services = [
     {
       id: 1,

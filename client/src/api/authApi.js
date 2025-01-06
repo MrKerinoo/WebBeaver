@@ -21,7 +21,8 @@ export const logoutUser = async () => {
 
 export const refreshToken = async () => {
   try {
-    await api.post(`${API_URL}/auth/refresh-token`);
+    const response = await api.post(`${API_URL}/auth/refresh-token`);
+    return response.data;
   } catch (error) {
     throw error;
   }

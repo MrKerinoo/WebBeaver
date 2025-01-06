@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { AuthProvider } from "./contexts/AuthContext.jsx";
 import { useAuth } from "./hooks/useAuth.js";
+import LoadingSpiner from "./components/LoadingSpiner.jsx";
 
 import Header from "./layout/Header";
 import Footer from "./layout/Footer";
@@ -20,7 +21,11 @@ import Prihlasenie from "./pages/Prihlasenie/Prihlasenie";
 const queryClient = new QueryClient();
 
 const ProtectedRoute = ({ children }) => {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return <LoadingSpiner />;
+  }
 
   if (!user || user.role !== "ADMIN") {
     return <Navigate to="/" />;

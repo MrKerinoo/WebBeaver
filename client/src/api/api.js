@@ -17,7 +17,7 @@ api.interceptors.response.use(
     if (error?.response?.status === 401 && !originalRequest?.sent) {
       originalRequest.sent = true;
       try {
-        refreshToken();
+        await refreshToken();
         return api(originalRequest);
       } catch (refreshError) {
         return Promise.reject(refreshError);

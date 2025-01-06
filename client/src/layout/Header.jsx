@@ -1,9 +1,48 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 
+const Profile = () => {
+  const { logout, user } = useAuth();
+
+  return (
+    <div className="group relative">
+      {!user ? (
+        <img
+          alt=""
+          src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+          className="mx-5 inline-block size-10 rounded-full"
+        />
+      ) : (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="white"
+          className="mx-5 size-10"
+        >
+          <path
+            fillRule="evenodd"
+            d="M18.685 19.097A9.723 9.723 0 0 0 21.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 0 0 3.065 7.097A9.716 9.716 0 0 0 12 21.75a9.716 9.716 0 0 0 6.685-2.653Zm-12.54-1.285A7.486 7.486 0 0 1 12 15a7.486 7.486 0 0 1 5.855 2.812A8.224 8.224 0 0 1 12 20.25a8.224 8.224 0 0 1-5.855-2.438ZM15.75 9a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z"
+            clipRule="evenodd"
+          />
+        </svg>
+      )}
+      <div className="absolute right-0 z-40 w-28 translate-y-[-50px] rounded-md bg-white p-1 opacity-0 shadow-lg transition-all duration-300 ease-in-out group-hover:block group-hover:translate-y-0 group-hover:opacity-100">
+        <div className="flex flex-col items-center">
+          <Link className="block text-black" to="/profil">
+            Profil
+          </Link>
+          <button className="font-medium text-black" onClick={logout}>
+            Odhlásiť sa
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export default function Header() {
-  const { loggedIn, logout } = useAuth();
+  const { loggedIn } = useAuth();
 
   return (
     <header>
@@ -14,14 +53,8 @@ export default function Header() {
         <Link to="/onas">O nás</Link>
         <Link to="/kontakt">Kontakt</Link>
         <Link to="/pouzivatelia">Používatelia</Link>
-        {loggedIn ? (
-          <button className="text-white" onClick={logout}>
-            Odhlásiť sa
-          </button>
-        ) : (
-          <Link to="/prihlasenie">Prihlásenie</Link>
-        )}
       </nav>
+      {loggedIn ? <Profile /> : <Link to="/prihlasenie">Prihlásenie</Link>}
     </header>
   );
 }

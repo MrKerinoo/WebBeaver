@@ -31,8 +31,8 @@ export default function Prihlasenie() {
     mutationFn: loginUser,
     onSuccess: (data) => {
       console.log("PRIHLASENY", data);
+      login(data);
       alert("Prihlásenie prebehlo úspešne");
-      login();
       navigate("/pouzivatelia");
     },
     onError: (error) => {

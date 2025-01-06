@@ -1,28 +1,42 @@
 import React, { createContext, useEffect, useState } from "react";
-import { validateAccessToken, logoutUser } from "../api/authApi.js";
+import { logoutUser, validateAccessToken } from "../api/authApi.js";
 
 export const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [refreshingToken, setRefreshingToken] = useState(false);
 
-  const validate = async () => {
+  useEffect(() => {
+    validateToken();
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const validateToken = async () => {
     try {
-      const response = await validateAccessToken(user);
-      setLoggedIn(true);
+      const response = await validateAccessToken();
       setUser(response.data.user);
+      setLoggedIn(true);
+
+      const timer = setTimeout(() => {
+        setLoading(false);
+      }, 1000);
+      return () => clearTimeout(timer);
     } catch (error) {
-      //console.error("NEPRIHLASENY", error);
+      console.error("Error validating token:", error);
     }
   };
 
-  useEffect(() => {
-    validate();
-  }, []);
-
-  const login = async () => {
-    validate();
+  const login = async (response) => {
+    try {
+      setLoggedIn(true);
+      setUser(response.data.user);
+    } catch (error) {}
   };
 
   const logout = async () => {
@@ -36,7 +50,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ loggedIn, user, logout, login }}>
+    <AuthContext.Provider value={{ loggedIn, user, logout, login, loading }}>
       {children}
     </AuthContext.Provider>
   );

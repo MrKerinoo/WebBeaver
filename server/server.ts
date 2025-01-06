@@ -334,6 +334,9 @@ app.post("/api/auth/refresh-token", async (req, res) => {
 
       res.status(201).json({
         status: "success",
+        data: {
+          user: user,
+        },
         message: "Access token generated",
       });
     }
@@ -344,12 +347,10 @@ app.post(
   "/api/auth/validate-token",
   authenticateToken,
   async (req: any, res) => {
-    const user = req.user;
+    const user = req.user.user;
     res.status(200).json({
       status: "success",
-      data: {
-        user: user,
-      },
+      data: { user },
       message: "Token is valid",
     });
   }
@@ -379,7 +380,7 @@ app.delete("/api/auth/logout", async (req, res) => {
 
 function generateAccessToken(user: any) {
   return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET as string, {
-    expiresIn: "15s",
+    expiresIn: "15m",
   });
 }
 

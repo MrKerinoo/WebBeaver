@@ -2,10 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-html, body {
-    margin: 0;
-    padding: 0;
-    font-family: "Baloo Paaji 2", sans-serif;
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Baloo Paaji 2", sans-serif;
 }
 
 /*** HEADER ***/
@@ -14,7 +15,10 @@ header {
   height: 100px;
   display: flex;
   align-items: center;
+  padding: 5px;
   background-color: #14213d;
+  position: relative;
+  z-index: 50;
 }
 
 header .site-logo {
@@ -30,7 +34,7 @@ header .site-logo img {
 header a {
   text-decoration: none;
   color: #ffffff;
-  font-weight: 600;
+  font-weight: 500;
   padding: 5px 20px;
 }
 
@@ -258,7 +262,7 @@ header a {
   background-color: #f57e00;
   color: white;
   font-size: 20px;
-  font-weight: 600;
+  font-weight: 500;
   border: none;
   cursor: pointer;
 }
