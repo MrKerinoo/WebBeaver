@@ -1,7 +1,7 @@
 import React, { createContext, useEffect, useState } from "react";
 import { validateAccessToken, logoutUser } from "../api/authApi.js";
 
-export const AuthContext = createContext();
+export const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     validate();
-  }, [loggedIn]);
+  }, []);
 
   const login = async () => {
     validate();

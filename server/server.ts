@@ -82,8 +82,10 @@ app.get("/api/users", authenticateToken, async (req, res) => {
 // Get a User
 app.get("/api/users/:id", async (req, res) => {
   try {
+    const accountId = parseInt(req.params.id);
+
     const user = await db.query.AccountTable.findFirst({
-      where: eq(AccountTable.accountId, parseInt(req.params.id)),
+      where: eq(AccountTable.accountId, accountId),
     });
 
     res.status(200).json({
@@ -167,6 +169,7 @@ app.put("/api/users/:id", async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(result.data.password, 13);
 
+    const accountId = parseInt(req.params.id);
     const user = await db
       .update(AccountTable)
       .set({
@@ -174,7 +177,7 @@ app.put("/api/users/:id", async (req, res) => {
         password: hashedPassword,
         role: result.data.role,
       })
-      .where(eq(AccountTable.accountId, parseInt(req.params.id)));
+      .where(eq(AccountTable.accountId, accountId));
 
     res.status(200).json({
       status: "success",
@@ -191,15 +194,22 @@ app.put("/api/users/:id", async (req, res) => {
 // Delete a User
 app.delete("/api/users/:id", async (req, res) => {
   try {
+    const accountId = parseInt(req.params.id);
+
+    const token = await db
+      .delete(RefreshTokenTable)
+      .where(eq(RefreshTokenTable.accountId, accountId));
+
     const user = await db
       .delete(AccountTable)
-      .where(eq(AccountTable.accountId, parseInt(req.params.id)));
+      .where(eq(AccountTable.accountId, accountId));
 
     res.status(204).json({
       status: "success",
       message: "User deleted",
       data: {
         account: user,
+        tokens: token,
       },
     });
   } catch (err) {

@@ -1,8 +1,9 @@
-import React, { StrictMode } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import React, { StrictMode, useContext, useEffect, useState } from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { AuthProvider } from "./contexts/AuthContext.jsx";
+import { useAuth } from "./hooks/useAuth.js";
 
 import Header from "./layout/Header";
 import Footer from "./layout/Footer";
@@ -18,6 +19,15 @@ import Prihlasenie from "./pages/Prihlasenie/Prihlasenie";
 
 const queryClient = new QueryClient();
 
+const ProtectedRoute = ({ children }) => {
+  const { user } = useAuth();
+
+  if (!user || user.role !== "ADMIN") {
+    return <Navigate to="/" />;
+  }
+  return children;
+};
+
 export default function App() {
   return (
     <AuthProvider>
@@ -32,7 +42,15 @@ export default function App() {
               <Route path="/onas" element={<Onas />} />
               <Route path="/prihlasenie" element={<Prihlasenie />} />
 
-              <Route path="/pouzivatelia" element={<Pouzivatelia />} />
+              <Route
+                path="/pouzivatelia"
+                element={
+                  <ProtectedRoute>
+                    <Pouzivatelia />
+                  </ProtectedRoute>
+                }
+              />
+
               <Route path="/pouzivatel/:id" element={<PouzivatelInfo />} />
               <Route
                 path="/pouzivatel/:id/upravit"

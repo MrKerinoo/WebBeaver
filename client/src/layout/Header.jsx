@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-import { AuthContext } from "../contexts/AuthContext";
+import { useAuth } from "../hooks/useAuth";
 
 export default function Header() {
-  const { loggedIn, logout, user } = useContext(AuthContext);
+  const { loggedIn, logout } = useAuth();
 
   return (
     <header>

@@ -3,12 +3,12 @@ import { useNavigate } from "react-router-dom";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { loginUser } from "../../api/authApi.js";
-import { AuthContext } from "../../contexts/AuthContext.jsx";
+import { useAuth } from "../../hooks/useAuth.js";
 
 import { z } from "zod";
 
 export default function Prihlasenie() {
-  const { login } = useContext(AuthContext);
+  const { login } = useAuth();
 
   const loginSchema = z.object({
     username: z
