@@ -75,7 +75,7 @@ export default function Domov() {
   ));
 
   return (
-    <div>
+    <div className="w-full">
       <div className="main-container">
         <h1>Moderné webové stránky</h1>
         <p>Dizajn, tvorba a údržba</p>

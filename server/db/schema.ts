@@ -9,6 +9,12 @@ export const AccountTable = pgTable("account", {
   username: varchar("username", { length: 50 }).notNull(),
   password: varchar("password", { length: 255 }).notNull(),
   role: AccountRole("role").default("USER").notNull(),
+  firstName: varchar("first_name", { length: 255 }),
+  lastName: varchar("last_name", { length: 255 }),
+  picture: varchar("picture", { length: 255 }),
+  phone: varchar("phone", { length: 255 }),
+  email: varchar("email", { length: 255 }),
+  iban: varchar("iban", { length: 255 }),
 });
 
 export const AccountTableRelations = relations(AccountTable, ({ many }) => {

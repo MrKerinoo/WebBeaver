@@ -14,7 +14,11 @@ api.interceptors.response.use(
     const originalRequest = error?.config;
 
     // Try to refresh the token only once
-    if (error?.response?.status === 401 && !originalRequest?.sent) {
+    if (
+      error?.response?.status === 401 &&
+      error?.response?.type === "token" &&
+      !originalRequest?.sent
+    ) {
       originalRequest.sent = true;
       try {
         await refreshToken();

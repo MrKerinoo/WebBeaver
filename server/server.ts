@@ -8,6 +8,7 @@ import cors from "cors";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import cookieParser from "cookie-parser";
+import multer from "multer";
 
 import authenticateToken from "./middleware/authenticateToken";
 
@@ -22,6 +23,32 @@ const corsOptions = {
   origin: ["http://localhost:5173"],
   credentials: true,
 };
+
+//Storage for images
+const imageStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/profile_pictures");
+  },
+  filename: function (req, file, cb) {
+    const time = Date.now();
+    const fileName = `${time}-${file.originalname}`;
+    cb(null, fileName);
+  },
+});
+const uploadImages = multer({ storage: imageStorage });
+
+//Storage for files
+const fileStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/files");
+  },
+  filename: function (req, file, cb) {
+    const time = Date.now();
+    const fileName = `${time}-${file.originalname}`;
+    cb(null, fileName);
+  },
+});
+const uploadFiles = multer({ storage: fileStorage });
 
 app.use(cors(corsOptions));
 app.use(express.json());
@@ -42,6 +69,31 @@ const userSchema = z.object({
   role: z.enum(["USER", "ADMIN"], {
     errorMap: () => ({ message: "Rola je povinná" }),
   }),
+});
+
+const profileSchema = z.object({
+  firstName: z
+    .string()
+    .min(3, { message: "Meno musí mať aspoň 3 znaky" })
+    .max(20, { message: "Meno môže mať maximálne 20 znakov" }),
+
+  lastName: z
+    .string()
+    .min(3, { message: "Meno musí mať aspoň 3 znaky" })
+    .max(20, { message: "Meno môže mať maximálne 20 znakov" }),
+
+  email: z.string().email({ message: "Emailová adresa musí byť platná." }),
+
+  phone: z.string().regex(/^\+?\d{10,12}$/, {
+    message: "Telefónne číslo musí byť platné a obsahovať 10-12 číslic.",
+  }),
+
+  iban: z
+    .string()
+    .regex(/^SK\d{2}\d{4}\d{6}\d{10}$/, {
+      message: "IBAN musí byť platný slovenský IBAN.",
+    })
+    .length(24, { message: "IBAN musí mať presne 24 znakov." }),
 });
 
 const loginSchema = z.object({
@@ -217,6 +269,59 @@ app.delete("/api/users/:id", async (req, res) => {
   }
 });
 
+//Update a profile
+app.post("/api/profiles/:id", async (req, res) => {
+  const accountId = parseInt(req.params.id);
+  const { firstName, lastName, email, iban } = profileSchema.parse(req.body);
+  const { picture, phone } = req.body;
+
+  console.log("LOGUJEM TU DATA", accountId, req.body);
+  try {
+    const result = profileSchema.safeParse({
+      firstName: firstName,
+      lastName: lastName,
+      picture: picture,
+      phone: phone,
+      email: email,
+      iban: iban,
+    });
+
+    if (!result.success) {
+      const errors = result.error.errors.map((err) => ({
+        path: err.path,
+        message: err.message,
+      }));
+      res.status(500).json({
+        status: "fail",
+        errors,
+      });
+      return;
+    }
+
+    const user = await db
+      .update(AccountTable)
+      .set({
+        firstName: result.data.firstName,
+        lastName: result.data.lastName,
+        email: result.data.email,
+        phone: result.data.phone,
+        iban: result.data.iban,
+      })
+      .where(eq(AccountTable.accountId, accountId))
+      .returning();
+
+    res.status(200).json({
+      status: "success",
+      message: "User updated",
+      data: {
+        user: user,
+      },
+    });
+  } catch (err) {
+    console.log(err);
+  }
+});
+
 //Login a User
 app.post("/api/auth/login", async (req, res) => {
   const { username, password } = req.body;
@@ -247,6 +352,7 @@ app.post("/api/auth/login", async (req, res) => {
     if (!user) {
       res.status(401).json({
         status: "error",
+        type: "data",
         message: "Nesprávne meno",
       });
       return;
@@ -260,6 +366,7 @@ app.post("/api/auth/login", async (req, res) => {
     if (!isPasswordValid) {
       res.status(401).json({
         status: "error",
+        type: "data",
         message: "Nesprávne heslo",
       });
       return;
@@ -303,6 +410,7 @@ app.post("/api/auth/refresh-token", async (req, res) => {
   if (refreshToken == null) {
     res.status(401).json({
       status: "error",
+      type: "token",
       message: "Refresh token is required",
     });
     return;
@@ -347,7 +455,7 @@ app.post(
   "/api/auth/validate-token",
   authenticateToken,
   async (req: any, res) => {
-    const user = req.user.user;
+    const user = req.user;
     res.status(200).json({
       status: "success",
       data: { user },
@@ -359,11 +467,13 @@ app.post(
 //Delete a refresh token
 app.delete("/api/auth/logout", async (req, res) => {
   const refreshToken = req.cookies.refreshToken;
-  console.log("REFRESH TOKEN", refreshToken);
   try {
     await db
       .delete(RefreshTokenTable)
       .where(eq(RefreshTokenTable.token, refreshToken));
+
+    res.clearCookie("accessToken", { path: "/" });
+    res.clearCookie("refreshToken", { path: "/" });
 
     res.status(204).json({
       status: "success",
@@ -383,6 +493,34 @@ function generateAccessToken(user: any) {
     expiresIn: "15m",
   });
 }
+
+// Upload a profile picture
+app.post(
+  "/api/files/upload/picture",
+  uploadImages.single("file"),
+  (req, res) => {
+    const file = req.file;
+    const user = JSON.parse(req.body.user);
+
+    try {
+      res.status(201).json({
+        status: "success",
+        message: "File uploaded",
+        data: {
+          file: file,
+          user: user,
+        },
+      });
+    } catch (err) {
+      res.status(500).json({
+        status: "error",
+        message: "Failed to upload file",
+      });
+    }
+  }
+);
+
+// Upload an invoice
 
 app.listen(port, () => {
   console.log(`Server is up and listening on port ${port}`);

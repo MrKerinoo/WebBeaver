@@ -32,6 +32,15 @@ const Profile = () => {
           <Link className="block text-black" to="/profil">
             Profil
           </Link>
+          {user.role === "ADMIN" ? (
+            <Link className="block text-black" to="/pouzivatelia">
+              Systém
+            </Link>
+          ) : (
+            <Link className="block text-black" to="/pouzivatel">
+              Systém
+            </Link>
+          )}
           <button className="font-medium text-black" onClick={logout}>
             Odhlásiť sa
           </button>
@@ -52,7 +61,6 @@ export default function Header() {
       <nav>
         <Link to="/onas">O nás</Link>
         <Link to="/kontakt">Kontakt</Link>
-        <Link to="/pouzivatelia">Používatelia</Link>
       </nav>
       {loggedIn ? <Profile /> : <Link to="/prihlasenie">Prihlásenie</Link>}
     </header>

@@ -6,6 +6,7 @@ export default function authenticateToken(req: any, res: any, next: any) {
   if (token == null) {
     res.status(401).json({
       status: "error",
+      type: "token",
       message: "Token is required",
     });
     return;
@@ -18,6 +19,7 @@ export default function authenticateToken(req: any, res: any, next: any) {
       if (err) {
         res.status(401).json({
           status: "error",
+          type: "token",
           message: "Token is invalid",
         });
         return;

@@ -1,16 +1,21 @@
-import React, { useState } from "react";
-import { z } from "zod";
+import React, { useEffect, useState } from "react";
+import FileUploader from "../../components/FileUploader";
+import z from "zod";
+import InputField from "../../components/InputField";
+import { useAuth } from "../../hooks/useAuth";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { updateProfile } from "../../api/userApi";
 
-import InputField from "/src/components/InputField";
+export default function Profil() {
+  const { user, setUser } = useAuth();
 
-export default function Kontakt() {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [message, setMessage] = useState("");
+  const [firstName, setFirstName] = useState(user.firstName || "");
+  const [lastName, setLastName] = useState(user.lastName || "");
+  const [email, setEmail] = useState(user.email || "");
+  const [phone, setPhone] = useState(user.phone || "");
+  const [iban, setIban] = useState(user.iban || "");
 
-  const formSchema = z.object({
+  const profileSchema = z.object({
     firstName: z
       .string()
       .min(3, { message: "Meno musí mať aspoň 3 znaky" })
@@ -26,26 +31,22 @@ export default function Kontakt() {
     phone: z.string().regex(/^\+?\d{10,12}$/, {
       message: "Telefónne číslo musí byť platné a obsahovať 10-12 číslic.",
     }),
-
-    message: z
-      .string()
-      .min(10, { message: "Správa musí mať aspoň 10 znakov." })
-      .max(500, { message: "Správa môže mať maximálne 500 znakov." }),
   });
 
-  const handleChange = (e) => {
-    setMessage(e.target.value);
-  };
+  const updateUserMutation = useMutation({
+    mutationFn: ({ id, ...userData }) => updateProfile(id, userData),
+    onSuccess: (data) => {
+      setUser(data.data.user[0]);
+    },
+  });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    const result = formSchema.safeParse({
+    const result = profileSchema.safeParse({
       firstName,
       lastName,
       email,
       phone,
-      message,
     });
 
     if (!result.success) {
@@ -53,7 +54,21 @@ export default function Kontakt() {
       alert(errorMessages.join("\n"));
       return;
     } else {
-      alert("Správa bola úspešne odoslaná!");
+    }
+
+    try {
+      updateUserMutation.mutate({
+        id: user.accountId,
+        firstName,
+        lastName,
+        email,
+        phone,
+        iban,
+      });
+    } catch {
+      throw error;
+    }
+    {
     }
   };
 
@@ -83,6 +98,13 @@ export default function Kontakt() {
       placeHolder: "+421",
       set: (e) => setPhone(e.target.value),
     },
+    {
+      name: "iban",
+      value: iban,
+      label: "IBAN",
+      placeHolder: "SKXX XXXX XXXX XXXX XXXX XXXX",
+      set: (e) => setIban(e.target.value),
+    },
   ];
 
   const fieldsItems = fields.map((field) => (
@@ -104,34 +126,24 @@ export default function Kontakt() {
 
   return (
     <div className="w-full">
-      <div className="main-container">
-        <h1>Kontakt</h1>
-        <p>Kontaktujte nás pre váš budúci projekt.</p>
-      </div>
-
-      <div className="contact-container">
-        <h1>Napíšte nám</h1>
-
+      <div className="flex flex-col items-center justify-center">
+        <h1>Profil</h1>
         <form onSubmit={handleSubmit}>
           <div className="contact-form">{fieldsItems}</div>
 
-          <div className="contact-textarea">
-            <textarea
-              className="input-textarea"
-              id="message"
-              name="message"
-              type="text"
-              value={message}
-              onChange={handleChange}
-              placeholder="Vaša správa"
-            />
+          <div className="col-span-full min-w-[45rem] py-5">
+            <label
+              htmlFor="cover-photo"
+              className="block text-sm/6 font-medium text-white"
+            >
+              Profilová fotka
+            </label>
+            <FileUploader />
           </div>
 
-          <div className="flex justify-center">
-            <button type="submit" className="submit-button">
-              Odoslať
-            </button>
-          </div>
+          <button type="submit" className="submit-button">
+            Potvrdiť zmeny
+          </button>
         </form>
       </div>
     </div>

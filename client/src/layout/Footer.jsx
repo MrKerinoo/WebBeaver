@@ -7,17 +7,14 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-tertiary pt-10 pb-5 w-full">
+    <footer className="w-full bg-tertiary pb-5 pt-10">
       <div className="flex justify-center pb-10">
-        <nav className="flex justify-between w-full max-w-96">
-          <Link to="/onas" className="text-white text-center w-full">
+        <nav className="flex w-full max-w-96 justify-between">
+          <Link to="/onas" className="w-full text-center text-white">
             O nás
           </Link>
-          <Link to="/kontakt" className="text-white text-center w-full">
+          <Link to="/kontakt" className="w-full text-center text-white">
             Kontakt
-          </Link>
-          <Link to="/pouzivatelia" className="text-white text-center w-full">
-            Používatelia
           </Link>
         </nav>
       </div>

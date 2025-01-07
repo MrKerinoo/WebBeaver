@@ -53,3 +53,13 @@ export const deleteUser = async (id) => {
     throw error;
   }
 };
+
+export const updateProfile = async (id, userData) => {
+  try {
+    const response = await api.post(`${API_URL}/profiles/${id}`, userData);
+    return response.data;
+  } catch (error) {
+    console.error(`Error updating user with ID ${id}:`, error);
+    throw error;
+  }
+};

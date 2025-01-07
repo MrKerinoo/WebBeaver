@@ -36,6 +36,27 @@
       "when": 1736013583354,
       "tag": "0004_hesitant_deathstrike",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1736286191762,
+      "tag": "0005_cooing_the_captain",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1736287485585,
+      "tag": "0006_plain_kate_bishop",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1736288192226,
+      "tag": "0007_zippy_nightshade",
+      "breakpoints": true
     }
   ]
 }

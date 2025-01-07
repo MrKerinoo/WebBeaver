@@ -9,6 +9,7 @@ import { z } from "zod";
 
 export default function Prihlasenie() {
   const { login } = useAuth();
+  const [showPassword, setShowPassword] = useState(true);
 
   const loginSchema = z.object({
     username: z
@@ -69,45 +70,46 @@ export default function Prihlasenie() {
   };
 
   return (
-    <div>
-      <div className="bg-primary pb-10">
-        <div className="flex justify-center">
-          <div className="flex flex-col items-center text-[50px] text-white">
-            <h1>Prihlásiť sa</h1>
-            <form onSubmit={handleFormSubmit}>
-              <div className="mt-2 w-[400px]">
-                <input
-                  id="username"
-                  name="username"
-                  type="text"
-                  value={username}
-                  onChange={handleUsernameChange}
-                  placeholder="Meno"
-                  className="mb-5 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-secondary sm:text-sm/6"
-                />
-
-                <input
-                  id="password"
-                  name="password"
-                  type="text"
-                  value={password}
-                  onChange={handlePasswordChange}
-                  placeholder="Heslo"
-                  className="mb-5 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-secondary sm:text-sm/6"
-                />
-              </div>
-
-              <div className="flex justify-center">
-                <button
-                  type="submit"
-                  className="w-full rounded-md bg-secondary px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-secondary/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-                >
-                  <h1>Potvrdiť</h1>
-                </button>
-              </div>
-            </form>
+    <div className="flex justify-center bg-primary">
+      <div className="flex flex-col items-center text-white">
+        <img
+          src="/src/assets/images/webBeaverFavIcon.png"
+          alt="WebBeaver."
+          className="h-auto w-20"
+        />
+        <h1 className="p-10 text-5xl">Prihlásiť sa</h1>
+        <form onSubmit={handleFormSubmit}>
+          <label htmlFor="email" className="block text-base/8 font-medium">
+            Používateľské meno
+          </label>
+          <div className="mt-2 w-[400px]">
+            <input
+              id="username"
+              name="username"
+              type="text"
+              value={username}
+              onChange={handleUsernameChange}
+              className="mb-5 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-secondary sm:text-sm/6"
+            />
+            <label htmlFor="email" className="block text-base/8 font-medium">
+              Heslo
+            </label>
+            <input
+              id="password"
+              name="password"
+              type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={handlePasswordChange}
+              className="mb-5 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-secondary sm:text-sm/6"
+            />
           </div>
-        </div>
+
+          <div className="flex justify-center">
+            <button type="submit" className="submit-button">
+              <h1>Potvrdiť</h1>
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );

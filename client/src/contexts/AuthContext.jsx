@@ -1,5 +1,6 @@
 import React, { createContext, useEffect, useState } from "react";
 import { logoutUser, validateAccessToken } from "../api/authApi.js";
+import Cookies from "js-cookie";
 
 export const AuthContext = createContext(null);
 
@@ -44,13 +45,17 @@ export const AuthProvider = ({ children }) => {
       await logoutUser();
       setLoggedIn(false);
       setUser(null);
+      Cookies.remove("accessToken");
+      Cookies.remove("refreshToken");
     } catch (error) {
       console.error("Error logging out:", error);
     }
   };
 
   return (
-    <AuthContext.Provider value={{ loggedIn, user, logout, login, loading }}>
+    <AuthContext.Provider
+      value={{ loggedIn, user, loading, setUser, logout, login }}
+    >
       {children}
     </AuthContext.Provider>
   );

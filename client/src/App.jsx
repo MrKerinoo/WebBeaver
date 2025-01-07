@@ -17,17 +17,19 @@ import Pouzivatelia from "./pages/Pouzivatelia/Pouzivatelia";
 import PouzivatelInfo from "./pages/Pouzivatelia/PouzivatelInfo";
 import PouzivatelUpravit from "./pages/Pouzivatelia/PouzivatelUpravit";
 import Prihlasenie from "./pages/Prihlasenie/Prihlasenie";
+import Profil from "./pages/Profil/Profil";
 
 const queryClient = new QueryClient();
 
-const ProtectedRoute = ({ children }) => {
+const ProtectedRoute = ({ children, roles }) => {
   const { user, loading } = useAuth();
 
   if (loading) {
     return <LoadingSpiner />;
   }
 
-  if (!user || user.role !== "ADMIN") {
+  if (!user || !roles.includes(user.role)) {
+    // ZOBRAZIT OKNO - UZIVATEL NEMA PRAVA
     return <Navigate to="/" />;
   }
   return children;
@@ -39,31 +41,42 @@ export default function App() {
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
           <StrictMode>
-            <Header />
+            <div className="flex min-h-screen flex-col">
+              <Header />
+              <main className="flex flex-1 items-center justify-center">
+                <Routes>
+                  <Route path="/" element={<Domov />} />
+                  <Route path="/kontakt" element={<Kontakt />} />
+                  <Route path="/onas" element={<Onas />} />
+                  <Route path="/prihlasenie" element={<Prihlasenie />} />
 
-            <Routes>
-              <Route path="/" element={<Domov />} />
-              <Route path="/kontakt" element={<Kontakt />} />
-              <Route path="/onas" element={<Onas />} />
-              <Route path="/prihlasenie" element={<Prihlasenie />} />
+                  <Route
+                    path="/pouzivatelia"
+                    element={
+                      <ProtectedRoute roles={["ADMIN"]}>
+                        <Pouzivatelia />
+                      </ProtectedRoute>
+                    }
+                  />
 
-              <Route
-                path="/pouzivatelia"
-                element={
-                  <ProtectedRoute>
-                    <Pouzivatelia />
-                  </ProtectedRoute>
-                }
-              />
+                  <Route
+                    path="/profil"
+                    element={
+                      <ProtectedRoute roles={["ADMIN", "USER"]}>
+                        <Profil />
+                      </ProtectedRoute>
+                    }
+                  />
 
-              <Route path="/pouzivatel/:id" element={<PouzivatelInfo />} />
-              <Route
-                path="/pouzivatel/:id/upravit"
-                element={<PouzivatelUpravit />}
-              />
-            </Routes>
-
-            <Footer />
+                  <Route path="/pouzivatel/:id" element={<PouzivatelInfo />} />
+                  <Route
+                    path="/pouzivatel/:id/upravit"
+                    element={<PouzivatelUpravit />}
+                  />
+                </Routes>
+              </main>
+              <Footer />
+            </div>
           </StrictMode>
         </BrowserRouter>
         <ReactQueryDevtools />

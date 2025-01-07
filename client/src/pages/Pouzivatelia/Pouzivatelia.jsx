@@ -12,7 +12,7 @@ import { z } from "zod";
 import { MdClose } from "react-icons/md";
 
 export default function Pouzivatelia() {
-  const { loggedIn, user } = useAuth();
+  //const { loggedIn, user } = useAuth();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -23,9 +23,11 @@ export default function Pouzivatelia() {
 
   const queryClient = useQueryClient();
 
+  /*
   useEffect(() => {
     console.log(user);
   }, [loggedIn, user]);
+  */
 
   const usersQuery = useQuery({
     queryKey: ["users"],
