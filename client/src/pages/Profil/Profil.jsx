@@ -5,6 +5,7 @@ import InputField from "../../components/InputField";
 import { useAuth } from "../../hooks/useAuth";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { updateProfile } from "../../api/userApi";
+import { uploadFile } from "../../api/fileApi";
 
 export default function Profil() {
   const { user, setUser } = useAuth();
@@ -14,6 +15,7 @@ export default function Profil() {
   const [email, setEmail] = useState(user.email || "");
   const [phone, setPhone] = useState(user.phone || "");
   const [iban, setIban] = useState(user.iban || "");
+  const [file, setFile] = useState(null);
 
   const profileSchema = z.object({
     firstName: z
@@ -40,7 +42,7 @@ export default function Profil() {
     },
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const result = profileSchema.safeParse({
       firstName,
@@ -53,10 +55,18 @@ export default function Profil() {
       const errorMessages = result.error.errors.map((err) => err.message);
       alert(errorMessages.join("\n"));
       return;
-    } else {
     }
 
     try {
+      if (file) {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("user", JSON.stringify(user));
+
+        // Upload the file
+        await uploadFile(formData);
+      }
+
       updateUserMutation.mutate({
         id: user.accountId,
         firstName,
@@ -65,10 +75,8 @@ export default function Profil() {
         phone,
         iban,
       });
-    } catch {
-      throw error;
-    }
-    {
+    } catch (error) {
+      console.error("Error submitting form:", error);
     }
   };
 
@@ -138,7 +146,7 @@ export default function Profil() {
             >
               Profilová fotka
             </label>
-            <FileUploader />
+            <FileUploader setFile={setFile} />
           </div>
 
           <button type="submit" className="submit-button">

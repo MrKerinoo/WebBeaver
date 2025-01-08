@@ -16,7 +16,7 @@ api.interceptors.response.use(
     // Try to refresh the token only once
     if (
       error?.response?.status === 401 &&
-      error?.response?.type === "token" &&
+      error?.response?.data?.type === "token" &&
       !originalRequest?.sent
     ) {
       originalRequest.sent = true;

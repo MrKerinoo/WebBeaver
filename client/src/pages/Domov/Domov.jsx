@@ -13,7 +13,7 @@ export default function Domov() {
 
   useEffect(() => {
     console.log(user);
-  }, [loggedIn, user]);
+  });
 
   const services = [
     {

@@ -4,7 +4,7 @@ import { PhotoIcon } from "@heroicons/react/24/solid";
 import { uploadFile } from "../api/fileApi";
 import { useAuth } from "../hooks/useAuth";
 
-export default function FileUploader() {
+export default function FileUploader({ setFile }) {
   const { user } = useAuth();
 
   const states = {
@@ -14,30 +14,15 @@ export default function FileUploader() {
     error: "error",
   };
 
-  const [file, setFile] = useState(null);
+  const [localFile, setLocalFile] = useState(null);
   const [status, setStatus] = useState("idle");
 
   function handleFileChange(e) {
     if (e.target.files) {
-      setFile(e.target.files[0]);
-    }
-  }
-
-  function handleFileUpload() {
-    if (!file) return;
-
-    setStatus(states.loading);
-
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("user", JSON.stringify(user));
-
-    try {
-      uploadFile(formData);
-      setStatus(states.success);
-      console.log(status);
-    } catch (err) {
-      setStatus(states.error);
+      const file = e.target.files[0];
+      console.log(file);
+      setLocalFile(file);
+      setFile(file);
     }
   }
 
@@ -62,21 +47,12 @@ export default function FileUploader() {
           <p className="pl-1">alebo potiahnite a hoďte</p>
         </div>
         <p className="text-xs/5 text-gray-600">PNG, JPG, SVG</p>
-        {file && (
+        {localFile && (
           <div className="text-sm text-white">
-            <p>{file.name}</p>
-            <p>{(file.size / 1024).toFixed(2)} KB</p>
-            <p>{file.type}</p>
+            <p>{localFile.name}</p>
+            <p>{(localFile.size / 1024).toFixed(2)} KB</p>
+            <p>{localFile.type}</p>
           </div>
-        )}
-        {file && status !== states.loading && (
-          <button
-            type="button"
-            className="hover:bg-secondary-dark mt-4 inline-flex items-center rounded-md border border-transparent bg-secondary px-4 py-2 text-sm/6 font-medium text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-secondary focus:ring-offset-2"
-            onClick={handleFileUpload}
-          >
-            Nahrať súbor
-          </button>
         )}
       </div>
     </div>

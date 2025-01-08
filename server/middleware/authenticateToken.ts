@@ -24,6 +24,7 @@ export default function authenticateToken(req: any, res: any, next: any) {
         });
         return;
       }
+      console.log("USER MIDDLEWARE", user);
       req.user = user;
       next();
     }

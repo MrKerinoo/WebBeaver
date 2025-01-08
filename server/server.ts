@@ -2,6 +2,7 @@ import { db } from "./db";
 import { AccountTable, RefreshTokenTable } from "./db/schema";
 import { asc, eq } from "drizzle-orm";
 import { z } from "zod";
+import path from "path";
 import dotenv from "dotenv";
 import express, { Application } from "express";
 import cors from "cors";
@@ -53,6 +54,7 @@ const uploadFiles = multer({ storage: fileStorage });
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 //Validation Schema
 const userSchema = z.object({
@@ -272,8 +274,7 @@ app.delete("/api/users/:id", async (req, res) => {
 //Update a profile
 app.post("/api/profiles/:id", async (req, res) => {
   const accountId = parseInt(req.params.id);
-  const { firstName, lastName, email, iban } = profileSchema.parse(req.body);
-  const { picture, phone } = req.body;
+  const { firstName, lastName, email, iban, phone, picture } = req.body;
 
   console.log("LOGUJEM TU DATA", accountId, req.body);
   try {
@@ -305,6 +306,7 @@ app.post("/api/profiles/:id", async (req, res) => {
         lastName: result.data.lastName,
         email: result.data.email,
         phone: result.data.phone,
+        picture: picture,
         iban: result.data.iban,
       })
       .where(eq(AccountTable.accountId, accountId))
@@ -373,10 +375,7 @@ app.post("/api/auth/login", async (req, res) => {
     }
 
     const accessToken = generateAccessToken(user);
-    const refreshToken = jwt.sign(
-      user,
-      process.env.REFRESH_TOKEN_SECRET as string
-    );
+    const refreshToken = generateRefreshToken(user);
 
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
@@ -494,21 +493,51 @@ function generateAccessToken(user: any) {
   });
 }
 
+function generateRefreshToken(user: any) {
+  return jwt.sign(user, process.env.REFRESH_TOKEN_SECRET as string, {});
+}
+
 // Upload a profile picture
 app.post(
   "/api/files/upload/picture",
   uploadImages.single("file"),
-  (req, res) => {
+  async (req, res) => {
     const file = req.file;
     const user = JSON.parse(req.body.user);
 
     try {
+      const userInsert = await db
+        .update(AccountTable)
+        .set({
+          picture: file?.filename,
+        })
+        .where(eq(AccountTable.accountId, user.accountId))
+        .returning();
+
+      const updatedUser = userInsert[0];
+
+      const accessToken = generateAccessToken(updatedUser);
+      const refreshToken = generateRefreshToken(updatedUser);
+
+      res.cookie("accessToken", accessToken, {
+        httpOnly: true,
+      });
+
+      res.cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+      });
+
+      await db.insert(RefreshTokenTable).values({
+        token: refreshToken,
+        accountId: user.accountId,
+      });
+
       res.status(201).json({
         status: "success",
         message: "File uploaded",
         data: {
           file: file,
-          user: user,
+          user: userInsert,
         },
       });
     } catch (err) {

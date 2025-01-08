@@ -2,15 +2,18 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 
+const UPLOADS_URL = import.meta.env.VITE_APP_UPLOAD_URL;
+
 const Profile = () => {
   const { logout, user } = useAuth();
 
+  console.log(user);
   return (
     <div className="group relative">
-      {!user ? (
+      {user.picture ? (
         <img
           alt=""
-          src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+          src={`${UPLOADS_URL}/profile_pictures/${user.picture}`}
           className="mx-5 inline-block size-10 rounded-full"
         />
       ) : (
