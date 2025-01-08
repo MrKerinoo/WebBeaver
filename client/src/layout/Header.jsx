@@ -36,7 +36,7 @@ const Profile = () => {
             Profil
           </Link>
           {user.role === "ADMIN" ? (
-            <Link className="block text-black" to="/pouzivatelia">
+            <Link className="block text-black" to="/admin">
               Systém
             </Link>
           ) : (

@@ -1,4 +1,4 @@
-import React, { StrictMode, useContext, useEffect, useState } from "react";
+import React, { StrictMode } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -13,11 +13,11 @@ import Domov from "./pages/Domov/Domov";
 import Kontakt from "./pages/Kontakt/Kontakt";
 import Onas from "./pages/Onas/Onas";
 
-import Pouzivatelia from "./pages/Pouzivatelia/Pouzivatelia";
-import PouzivatelInfo from "./pages/Pouzivatelia/PouzivatelInfo";
-import PouzivatelUpravit from "./pages/Pouzivatelia/PouzivatelUpravit";
+import PouzivatelInfo from "./pages/Admin/Pouzivatelia/PouzivatelInfo";
+import PouzivatelUpravit from "./pages/Admin/Pouzivatelia/PouzivatelUpravit";
 import Prihlasenie from "./pages/Prihlasenie/Prihlasenie";
 import Profil from "./pages/Profil/Profil";
+import Admin from "./pages/Admin/Admin.jsx";
 
 const queryClient = new QueryClient();
 
@@ -51,10 +51,10 @@ export default function App() {
                   <Route path="/prihlasenie" element={<Prihlasenie />} />
 
                   <Route
-                    path="/pouzivatelia"
+                    path="/admin"
                     element={
                       <ProtectedRoute roles={["ADMIN"]}>
-                        <Pouzivatelia />
+                        <Admin />
                       </ProtectedRoute>
                     }
                   />
@@ -73,6 +73,7 @@ export default function App() {
                     path="/pouzivatel/:id/upravit"
                     element={<PouzivatelUpravit />}
                   />
+                  {/* DOROBIT NOT FOUND PAGE <Route Component={<NenaslaSa/>} /> */}
                 </Routes>
               </main>
               <Footer />

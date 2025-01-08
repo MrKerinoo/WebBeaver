@@ -245,7 +245,6 @@ header a {
   display: flex;
   flex-direction: column;
   width: 700px;
-  padding-top: 2rem;
   padding-bottom: 2rem;
 }
 

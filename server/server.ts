@@ -1,5 +1,5 @@
 import { db } from "./db";
-import { AccountTable, RefreshTokenTable } from "./db/schema";
+import { AccountTable, RefreshTokenTable, ContactFormTable } from "./db/schema";
 import { asc, eq } from "drizzle-orm";
 import { z } from "zod";
 import path from "path";
@@ -108,6 +108,29 @@ const loginSchema = z.object({
     .string()
     .min(6, { message: "Heslo musí mať aspoň 6 znakov" })
     .max(20, { message: "Heslo musí mať maximálne 20 znakov" }),
+});
+
+const formSchema = z.object({
+  firstName: z
+    .string()
+    .min(3, { message: "Meno musí mať aspoň 3 znaky" })
+    .max(20, { message: "Meno môže mať maximálne 20 znakov" }),
+
+  lastName: z
+    .string()
+    .min(3, { message: "Priezvisko musí mať aspoň 3 znaky" })
+    .max(20, { message: "Priezvisko môže mať maximálne 20 znakov" }),
+
+  email: z.string().email({ message: "Emailová adresa musí byť platná." }),
+
+  phone: z.string().regex(/^\+?\d{10,12}$/, {
+    message: "Telefónne číslo musí byť platné a obsahovať 10-12 číslic.",
+  }),
+
+  message: z
+    .string()
+    .min(10, { message: "Správa musí mať aspoň 10 znakov." })
+    .max(500, { message: "Správa môže mať maximálne 500 znakov." }),
 });
 
 // Get all Users
@@ -550,6 +573,76 @@ app.post(
 );
 
 // Upload an invoice
+
+app.get("/api/contact", async (req, res) => {
+  try {
+    const forms = await db.query.ContactFormTable.findMany({
+      orderBy: [asc(ContactFormTable.createdAt)],
+    });
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        forms: forms,
+      },
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: "error",
+      message: "Failed to get contact forms",
+    });
+  }
+});
+
+// Contact form
+app.post("/api/contact", async (req, res) => {
+  const { firstName, lastName, email, phone, message } = req.body;
+
+  try {
+    const result = formSchema.safeParse({
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      phone: phone,
+      message: message,
+    });
+
+    if (!result.success) {
+      const errors = result.error.errors.map((err) => ({
+        path: err.path,
+        message: err.message,
+      }));
+      res.status(400).json({
+        status: "error",
+        message: "Nesprávne údaje",
+        errors,
+      });
+      return;
+    }
+
+    // created_at handled in database
+    const contact = await db.insert(ContactFormTable).values({
+      firstName: result.data.firstName,
+      lastName: result.data.lastName,
+      email: result.data.email,
+      phone: result.data.phone,
+      message: result.data.message,
+    });
+
+    res.status(201).json({
+      status: "success",
+      message: "Kontaktný formulár bol úspešne odoslaný",
+      data: {
+        contact: contact,
+      },
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: "error",
+      message: "Failed to send contact form",
+    });
+  }
+});
 
 app.listen(port, () => {
   console.log(`Server is up and listening on port ${port}`);

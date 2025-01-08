@@ -5,8 +5,8 @@ import {
   createUser,
   updateUser,
   deleteUser,
-} from "../../api/userApi.js";
-import { useAuth } from "../../hooks/useAuth.js";
+} from "../../../api/userApi.js";
+import { useAuth } from "../../../hooks/useAuth.js";
 import { z } from "zod";
 
 import { MdClose } from "react-icons/md";
@@ -157,11 +157,14 @@ export default function Pouzivatelia() {
 
   return (
     <div>
-      <div className="bg-primary px-10">
-        <div className="flex justify-center">
-          <div className="flex flex-col items-center text-[50px] text-white">
-            <h1>POUŽÍVATELIA</h1>
-          </div>
+      <div className="relative">
+        <div aria-hidden="true" className="absolute inset-0 flex items-center">
+          <div className="w-full border-t border-white" />
+        </div>
+        <div className="relative flex justify-center">
+          <h1 className="bg-primary px-3 text-6xl font-normal text-white">
+            POUŽÍVATELIA
+          </h1>
         </div>
       </div>
       <div className="bg-primary px-4 pb-20 pt-10 sm:px-6 lg:px-8">

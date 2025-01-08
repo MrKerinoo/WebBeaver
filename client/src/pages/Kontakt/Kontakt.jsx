@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { z } from "zod";
+import { useMutation } from "@tanstack/react-query";
 
 import InputField from "/src/components/InputField";
+import { sendContactForm } from "/src/api/contactApi";
 
 export default function Kontakt() {
   const [firstName, setFirstName] = useState("");
@@ -33,11 +35,18 @@ export default function Kontakt() {
       .max(500, { message: "Správa môže mať maximálne 500 znakov." }),
   });
 
+  const createFormMutation = useMutation({
+    mutationFn: sendContactForm,
+    onSuccess: () => {
+      queryClient.invalidateQueries(["users"]);
+    },
+  });
+
   const handleChange = (e) => {
     setMessage(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const result = formSchema.safeParse({
@@ -53,7 +62,20 @@ export default function Kontakt() {
       alert(errorMessages.join("\n"));
       return;
     } else {
+      //UPOZORNIT O SPRAVE
       alert("Správa bola úspešne odoslaná!");
+    }
+
+    try {
+      createFormMutation.mutate({
+        firstName,
+        lastName,
+        email,
+        phone,
+        message,
+      });
+    } catch (error) {
+      console.error("Error submitting contact form", error);
     }
   };
 
@@ -88,7 +110,7 @@ export default function Kontakt() {
   const fieldsItems = fields.map((field) => (
     <div key={field.name}>
       <label
-        htmlFor="email"
+        htmlFor={field.value}
         className="block text-base/8 font-medium text-white"
       >
         {field.label}
@@ -114,7 +136,12 @@ export default function Kontakt() {
 
         <form onSubmit={handleSubmit}>
           <div className="contact-form">{fieldsItems}</div>
-
+          <label
+            htmlFor="textarea"
+            className="block text-base/8 font-medium text-white"
+          >
+            Vaša správa
+          </label>
           <div className="contact-textarea">
             <textarea
               className="input-textarea"
