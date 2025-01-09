@@ -4,7 +4,7 @@ import { PhotoIcon } from "@heroicons/react/24/solid";
 import { uploadPicture } from "../api/fileApi";
 import { useAuth } from "../hooks/useAuth";
 
-export default function FileUploader({ setFile }) {
+export default function FileUploader({ setFile, types }) {
   const { user } = useAuth();
 
   const states = {
@@ -46,12 +46,13 @@ export default function FileUploader({ setFile }) {
           </label>
           <p className="pl-1">alebo potiahnite a hoďte</p>
         </div>
-        <p className="text-xs/5 text-gray-600">PNG, JPG, SVG</p>
+        <p className="text-xs/5 text-gray-600">
+          {types ? "PNG, JPG, SVG" : null}
+        </p>
         {localFile && (
           <div className="text-sm text-white">
             <p>{localFile.name}</p>
             <p>{(localFile.size / 1024).toFixed(2)} KB</p>
-            <p>{localFile.type}</p>
           </div>
         )}
       </div>

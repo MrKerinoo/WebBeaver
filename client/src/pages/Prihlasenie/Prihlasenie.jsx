@@ -5,48 +5,52 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { loginUser } from "../../api/authApi.js";
 import { useAuth } from "../../hooks/useAuth.js";
 
+import { HiEye } from "react-icons/hi";
+import { HiEyeOff } from "react-icons/hi";
+
 import { z } from "zod";
 
 export default function Prihlasenie() {
   const { login } = useAuth();
-  const [showPassword, setShowPassword] = useState(true);
+
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
+  const [errors, setErrors] = useState({
+    username: "",
+    password: "",
+  });
 
   const loginSchema = z.object({
     username: z
       .string()
-      .min(3, { message: "Meno musí mať aspoň 3 znaky" })
-      .max(20, { message: "Meno môže mať maximálne 20 znakov" }),
+      .min(3, { message: "Meno musí mať aspoň 3 znaky!" })
+      .max(20, { message: "Meno môže mať maximálne 20 znakov!" }),
 
     password: z
       .string()
-      .min(6, { message: "Heslo musí mať aspoň 6 znakov" })
-      .max(20, { message: "Heslo musí mať maximálne 20 znakov" }),
+      .min(6, { message: "Heslo musí mať aspoň 6 znakov!" })
+      .max(20, { message: "Heslo môže mať maximálne 20 znakov!" }),
   });
 
   const navigate = useNavigate();
-
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
 
   const loginUserMutation = useMutation({
     mutationFn: loginUser,
     onSuccess: (data) => {
       console.log("PRIHLASENY", data);
       login(data);
-      alert("Prihlásenie prebehlo úspešne");
       navigate("/admin");
     },
     onError: (error) => {
-      alert(error.response.data.message);
+      if (error.response.data.type === "name") {
+        setErrors({ username: error.response.data.message, password: "" });
+      } else {
+        setErrors({ username: "", password: error.response.data.message });
+      }
     },
   });
-
-  const handleUsernameChange = (e) => {
-    setUsername(e.target.value);
-  };
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-  };
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
@@ -61,10 +65,15 @@ export default function Prihlasenie() {
     });
 
     if (!result.success) {
-      const errorMessages = result.error.errors.map((err) => err.message);
-      alert(errorMessages.join("\n"));
+      const validationErrors = result.error.errors.reduce(
+        (acc, err) => ({ ...acc, [err.path[0]]: err.message }),
+        {},
+      );
+      setErrors(validationErrors);
       return;
     }
+
+    setErrors({ username: "", password: "" });
 
     loginUserMutation.mutate({ username, password });
   };
@@ -79,7 +88,7 @@ export default function Prihlasenie() {
         />
         <h1 className="p-10 text-5xl">Prihlásiť sa</h1>
         <form onSubmit={handleFormSubmit}>
-          <label htmlFor="email" className="block text-base/8 font-medium">
+          <label htmlFor="username" className="block text-base font-medium">
             Používateľské meno
           </label>
           <div className="mt-2 w-[400px]">
@@ -88,25 +97,54 @@ export default function Prihlasenie() {
               name="username"
               type="text"
               value={username}
-              onChange={handleUsernameChange}
-              className="mb-5 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-secondary sm:text-sm/6"
+              onChange={(e) => setUsername(e.target.value)}
+              className={`block w-full rounded-md border-2 py-1.5 text-gray-900 shadow-sm placeholder:text-gray-400 focus:outline-none sm:text-sm ${
+                errors.username
+                  ? "border-red-500"
+                  : "border-gray-300 focus:border-secondary"
+              }`}
             />
-            <label htmlFor="email" className="block text-base/8 font-medium">
-              Heslo
-            </label>
+            <p className="mt-2 h-5 text-sm text-red-500">
+              {errors.username || "\u00A0"}
+            </p>
+          </div>
+          <label
+            htmlFor="password"
+            className="mt-4 block text-base font-medium"
+          >
+            Heslo
+          </label>
+          <div className="relative mt-2 w-[400px]">
             <input
               id="password"
               name="password"
               type={showPassword ? "text" : "password"}
               value={password}
-              onChange={handlePasswordChange}
-              className="mb-5 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-secondary sm:text-sm/6"
+              onChange={(e) => setPassword(e.target.value)}
+              className={`block w-full rounded-md border-2 py-1.5 text-gray-900 shadow-sm placeholder:text-gray-400 focus:outline-none sm:text-sm ${
+                errors.password
+                  ? "border-red-500"
+                  : "border-gray-300 focus:border-secondary"
+              }`}
             />
+            <button
+              type="button"
+              className="absolute right-2 top-1/2 -translate-y-1/2 transform"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? (
+                <HiEye className="text-black" />
+              ) : (
+                <HiEyeOff className="text-black" />
+              )}
+            </button>
           </div>
-
-          <div className="flex justify-center">
+          <p className="mt-2 h-5 text-sm text-red-500">
+            {errors.password || "\u00A0"}
+          </p>
+          <div className="mt-6 flex justify-center">
             <button type="submit" className="submit-button">
-              <h1>Potvrdiť</h1>
+              Prihlásiť sa
             </button>
           </div>
         </form>

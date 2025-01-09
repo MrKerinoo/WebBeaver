@@ -274,7 +274,14 @@ export default function Pouzivatelia() {
       </div>
 
       {modalCreate && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/30">
+        <div
+          className="fixed inset-0 flex items-center justify-center bg-black/30"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              toggleModalCreate(null);
+            }
+          }}
+        >
           <div className="w-[400px] rounded-lg border-2 border-secondary bg-primary p-6">
             <div className="flex items-center justify-between pb-4">
               <h1 className="text-white">

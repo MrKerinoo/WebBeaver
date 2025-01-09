@@ -403,8 +403,8 @@ app.post("/api/auth/login", async (req, res) => {
     if (!user) {
       res.status(401).json({
         status: "error",
-        type: "data",
-        message: "Nesprávne meno",
+        type: "name",
+        message: "Nesprávne používateľské meno.",
       });
       return;
     }
@@ -417,8 +417,8 @@ app.post("/api/auth/login", async (req, res) => {
     if (!isPasswordValid) {
       res.status(401).json({
         status: "error",
-        type: "data",
-        message: "Nesprávne heslo",
+        type: "password",
+        message: "Nesprávne heslo.",
       });
       return;
     }
@@ -462,7 +462,7 @@ app.post("/api/auth/refresh-token", async (req, res) => {
   if (refreshToken == null) {
     res.status(401).json({
       status: "error",
-      type: "token",
+      type: "missing token",
       message: "Refresh token is required",
     });
     return;
@@ -611,14 +611,14 @@ app.post(
     const file = req.file;
     const invoiceData = JSON.parse(req.body.invoiceData);
 
-    const { account, expirationDate } = invoiceData;
+    const { accountId, expirationDate } = invoiceData;
 
     console.log("INVOICE DATA", invoiceData);
     console.log("FILE", file);
     try {
       const invoice = await db.insert(InvoiceTable).values({
         file: file,
-        accountId: parseInt(account.accountId),
+        accountId: parseInt(accountId),
         expirationDate: new Date(expirationDate),
       });
 
@@ -631,6 +631,7 @@ app.post(
         },
       });
     } catch (err) {
+      console.log(err);
       console.log(err);
       res.status(500).json({
         status: "error",
@@ -838,7 +839,7 @@ app.post("/api/contact", async (req, res) => {
       status: "success",
       message: "Kontaktný formulár bol úspešne odoslaný",
       data: {
-        contact: contact,
+        //contact: contact,
       },
     });
   } catch (err) {

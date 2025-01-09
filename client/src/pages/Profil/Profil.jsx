@@ -146,7 +146,7 @@ export default function Profil() {
             >
               Profilová fotka
             </label>
-            <FileUploader setFile={setFile} />
+            <FileUploader setFile={setFile} types={true} />
           </div>
 
           <button type="submit" className="submit-button">

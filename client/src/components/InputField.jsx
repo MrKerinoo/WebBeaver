@@ -1,9 +1,16 @@
-import React from 'react'
+import React from "react";
 
-export default function InputField({ name, value, onChange, placeHolder }) {
+export default function InputField({
+  name,
+  value,
+  onChange,
+  placeHolder,
+  error,
+}) {
   return (
     <div>
-      <input className="input-field"
+      <input
+        className={`input-field ${error ? "error" : ""}`}
         type="text"
         name={name}
         value={value}

@@ -153,30 +153,32 @@ export default function Faktury() {
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
-        <div className="mt-2 grid grid-cols-1">
-          <select
-            id="options"
-            value={selectedUser}
-            onChange={handleSelectedUserChange}
-            className="focus:outline-3 col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pl-3 pr-8 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:-outline-offset-2 focus:outline-secondary sm:text-sm/6"
-          >
-            {accounts.map((account) => (
-              <option key={account.accountId} value={account.accountId}>
-                {account.username}
-              </option>
-            ))}
-          </select>
-        </div>
+      <div className="flex justify-center">
+        <form onSubmit={handleSubmit}>
+          <div className="mt-2 grid grid-cols-1">
+            <select
+              id="options"
+              value={selectedUser}
+              onChange={handleSelectedUserChange}
+              className="focus:outline-3 col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pl-3 pr-8 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:-outline-offset-2 focus:outline-secondary sm:text-sm/6"
+            >
+              {accounts.map((account) => (
+                <option key={account.accountId} value={account.accountId}>
+                  {account.username}
+                </option>
+              ))}
+            </select>
+          </div>
 
-        <div className="py-5">
-          <h1 className="text-xl text-white">Vložiť faktúru</h1>
-          <FileUploader setFile={setFile} />
-        </div>
-        <button type="submit" className="submit-button">
-          Nahrať faktúru
-        </button>
-      </form>
+          <div className="py-5">
+            <h1 className="text-xl text-white">Vložiť faktúru</h1>
+            <FileUploader setFile={setFile} types={false} />
+          </div>
+          <button type="submit" className="submit-button">
+            Nahrať faktúru
+          </button>
+        </form>
+      </div>
 
       <div className="mt-8 flow-root">
         <div className="overflow-x-auto">
@@ -268,9 +270,7 @@ export default function Faktury() {
         <div className="fixed inset-0 flex items-center justify-center bg-black/30">
           <div className="w-[400px] rounded-lg border-2 border-secondary bg-primary p-6">
             <div className="flex items-center justify-between pb-4">
-              <h1 className="text-white">
-                {selectedUser ? "Upraviť používateľa" : "Pridať používateľa"}
-              </h1>
+              <h1 className="text-white">Upraviť stav faktúry</h1>
 
               <button onClick={() => toggleModalChange(null)}>
                 <MdClose className="text-[30px] text-white hover:text-secondary" />
@@ -294,7 +294,7 @@ export default function Faktury() {
                   type="submit"
                   className="w-full rounded-md bg-secondary px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-secondary/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
                 >
-                  Upraviť
+                  Potvrdiť
                 </button>
               </div>
             </form>
