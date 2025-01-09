@@ -34,7 +34,7 @@ export default function Prihlasenie() {
       console.log("PRIHLASENY", data);
       login(data);
       alert("Prihlásenie prebehlo úspešne");
-      navigate("/pouzivatelia");
+      navigate("/admin");
     },
     onError: (error) => {
       alert(error.response.data.message);

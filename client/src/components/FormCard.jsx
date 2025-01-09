@@ -8,7 +8,7 @@ export default function FormCard({ forms }) {
   };
 
   return (
-    <div className="py-20">
+    <div className="pt-20">
       {forms.map((form) => (
         <div
           key={form.id}

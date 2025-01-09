@@ -23,11 +23,17 @@ export default function Pouzivatelia() {
 
   const queryClient = useQueryClient();
 
-  /*
   useEffect(() => {
-    console.log(user);
-  }, [loggedIn, user]);
-  */
+    if (modalCreate) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [modalCreate]);
 
   const usersQuery = useQuery({
     queryKey: ["users"],

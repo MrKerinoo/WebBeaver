@@ -5,7 +5,7 @@ import InputField from "../../components/InputField";
 import { useAuth } from "../../hooks/useAuth";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { updateProfile } from "../../api/userApi";
-import { uploadFile } from "../../api/fileApi";
+import { uploadPicture } from "../../api/fileApi";
 
 export default function Profil() {
   const { user, setUser } = useAuth();
@@ -64,7 +64,7 @@ export default function Profil() {
         formData.append("user", JSON.stringify(user));
 
         // Upload the file
-        await uploadFile(formData);
+        await uploadPicture(formData);
       }
 
       updateUserMutation.mutate({
@@ -133,9 +133,9 @@ export default function Profil() {
   ));
 
   return (
-    <div className="w-full">
+    <div className="w-full pb-12">
       <div className="flex flex-col items-center justify-center">
-        <h1>Profil</h1>
+        <h1 className="pb-12 text-5xl font-medium text-white">Profil</h1>
         <form onSubmit={handleSubmit}>
           <div className="contact-form">{fieldsItems}</div>
 

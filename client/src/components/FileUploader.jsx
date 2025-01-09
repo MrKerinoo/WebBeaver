@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import { PhotoIcon } from "@heroicons/react/24/solid";
-import { uploadFile } from "../api/fileApi";
+import { uploadPicture } from "../api/fileApi";
 import { useAuth } from "../hooks/useAuth";
 
 export default function FileUploader({ setFile }) {

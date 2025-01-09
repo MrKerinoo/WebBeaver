@@ -1,4 +1,11 @@
-import { pgEnum, pgTable, serial, varchar, integer } from "drizzle-orm/pg-core";
+import {
+  pgEnum,
+  pgTable,
+  serial,
+  varchar,
+  integer,
+  jsonb,
+} from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import { timestamp } from "drizzle-orm/pg-core";
 
@@ -21,6 +28,7 @@ export const AccountTable = pgTable("account", {
 export const AccountTableRelations = relations(AccountTable, ({ many }) => {
   return {
     refreshTokens: many(RefreshTokenTable),
+    invoices: many(InvoiceTable),
   };
 });
 
@@ -45,6 +53,32 @@ export const RefreshTokenTableRelations = relations(
   }
 );
 
+export const InvoiceState = pgEnum("invoice_state", [
+  "ZAPLATENÁ",
+  "NEZAPLATENÁ",
+]);
+
+// INVOICE TABLE
+export const InvoiceTable = pgTable("invoice", {
+  invoiceId: serial("invoice_id").primaryKey(),
+  file: jsonb("file").notNull(),
+  state: InvoiceState("state").default("NEZAPLATENÁ").notNull(),
+  expirationDate: timestamp("expiration_date").notNull(),
+  accountId: integer("account_id")
+    .notNull()
+    .references(() => AccountTable.accountId),
+});
+
+export const InvoiceTableRelations = relations(InvoiceTable, ({ one }) => {
+  return {
+    account: one(AccountTable, {
+      fields: [InvoiceTable.accountId],
+      references: [AccountTable.accountId],
+    }),
+  };
+});
+
+// CONTACT FORM TABLE
 export const ContactFormTable = pgTable("contact_form", {
   contactFormId: serial("contact_form_id").primaryKey(),
   firstName: varchar("first_name", { length: 20 }).notNull(),

@@ -7,7 +7,7 @@ const UPLOADS_URL = import.meta.env.VITE_APP_UPLOAD_URL;
 const Profile = () => {
   const { logout, user } = useAuth();
 
-  console.log(user);
+  console.log("USER", user);
   return (
     <div className="group relative">
       {user.picture ? (
@@ -36,9 +36,14 @@ const Profile = () => {
             Profil
           </Link>
           {user.role === "ADMIN" ? (
-            <Link className="block text-black" to="/admin">
-              Systém
-            </Link>
+            <div>
+              <Link className="block text-black" to="/admin">
+                Systém
+              </Link>
+              <Link className="block text-black" to="/faktury">
+                Faktúry
+              </Link>
+            </div>
           ) : (
             <Link className="block text-black" to="/pouzivatel">
               Systém

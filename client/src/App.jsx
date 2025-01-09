@@ -18,6 +18,8 @@ import PouzivatelUpravit from "./pages/Admin/Pouzivatelia/PouzivatelUpravit";
 import Prihlasenie from "./pages/Prihlasenie/Prihlasenie";
 import Profil from "./pages/Profil/Profil";
 import Admin from "./pages/Admin/Admin.jsx";
+import Faktury from "./pages/Admin/Faktury/Faktury.jsx";
+import Pouzivatel from "./Pouzivatel/Pouzivatel.jsx";
 
 const queryClient = new QueryClient();
 
@@ -55,6 +57,24 @@ export default function App() {
                     element={
                       <ProtectedRoute roles={["ADMIN"]}>
                         <Admin />
+                      </ProtectedRoute>
+                    }
+                  />
+
+                  <Route
+                    path="/pouzivatel"
+                    element={
+                      <ProtectedRoute roles={["USER"]}>
+                        <Pouzivatel />
+                      </ProtectedRoute>
+                    }
+                  />
+
+                  <Route
+                    path="/faktury"
+                    element={
+                      <ProtectedRoute roles={["ADMIN"]}>
+                        <Faktury />
                       </ProtectedRoute>
                     }
                   />

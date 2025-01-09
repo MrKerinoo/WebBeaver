@@ -1,5 +1,10 @@
 import { db } from "./db";
-import { AccountTable, RefreshTokenTable, ContactFormTable } from "./db/schema";
+import {
+  AccountTable,
+  RefreshTokenTable,
+  ContactFormTable,
+  InvoiceTable,
+} from "./db/schema";
 import { asc, eq } from "drizzle-orm";
 import { z } from "zod";
 import path from "path";
@@ -10,6 +15,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import cookieParser from "cookie-parser";
 import multer from "multer";
+import fs from "fs";
 
 import authenticateToken from "./middleware/authenticateToken";
 
@@ -174,6 +180,10 @@ app.get("/api/users/:id", async (req, res) => {
     });
   } catch (err) {
     console.log(err);
+    res.status(500).json({
+      status: "error",
+      message: "Failed to get user",
+    });
   }
 });
 
@@ -218,6 +228,10 @@ app.post("/api/users", async (req, res) => {
     });
   } catch (err) {
     console.log(err);
+    res.status(500).json({
+      status: "error",
+      message: "Failed to create user",
+    });
   }
 });
 
@@ -265,6 +279,10 @@ app.put("/api/users/:id", async (req, res) => {
     });
   } catch (err) {
     console.log(err);
+    res.status(500).json({
+      status: "error",
+      message: "Failed to update user",
+    });
   }
 });
 
@@ -291,6 +309,10 @@ app.delete("/api/users/:id", async (req, res) => {
     });
   } catch (err) {
     console.log(err);
+    res.status(500).json({
+      status: "error",
+      message: "Failed to delete user",
+    });
   }
 });
 
@@ -344,6 +366,10 @@ app.post("/api/profiles/:id", async (req, res) => {
     });
   } catch (err) {
     console.log(err);
+    res.status(500).json({
+      status: "error",
+      message: "Failed to update user",
+    });
   }
 });
 
@@ -422,6 +448,10 @@ app.post("/api/auth/login", async (req, res) => {
     });
   } catch (err) {
     console.log(err);
+    res.status(500).json({
+      status: "error",
+      message: "Failed to log in",
+    });
   }
 });
 
@@ -564,6 +594,44 @@ app.post(
         },
       });
     } catch (err) {
+      console.log(err);
+      res.status(500).json({
+        status: "error",
+        message: "Failed to upload picture",
+      });
+    }
+  }
+);
+
+//Upload and create invoice
+app.post(
+  "/api/files/upload/invoice",
+  uploadFiles.single("file"),
+  async (req, res) => {
+    const file = req.file;
+    const invoiceData = JSON.parse(req.body.invoiceData);
+
+    const { account, expirationDate } = invoiceData;
+
+    console.log("INVOICE DATA", invoiceData);
+    console.log("FILE", file);
+    try {
+      const invoice = await db.insert(InvoiceTable).values({
+        file: file,
+        accountId: parseInt(account.accountId),
+        expirationDate: new Date(expirationDate),
+      });
+
+      res.status(201).json({
+        status: "success",
+        message: "File uploaded",
+        data: {
+          file: file,
+          invoice: invoice,
+        },
+      });
+    } catch (err) {
+      console.log(err);
       res.status(500).json({
         status: "error",
         message: "Failed to upload file",
@@ -572,8 +640,145 @@ app.post(
   }
 );
 
-// Upload an invoice
+//Get all invoices
+app.get("/api/uploads/files", async (req, res) => {
+  try {
+    const invoices = await db.query.InvoiceTable.findMany({
+      orderBy: [asc(InvoiceTable.expirationDate)],
+    });
 
+    res.status(200).json({
+      status: "success",
+      data: {
+        invoices: invoices,
+      },
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      status: "error",
+      message: "Failed to get invoices",
+    });
+  }
+});
+
+//Get all invoices of an user
+app.post("/api/uploads/files", async (req, res) => {
+  const { accountId } = req.body;
+  try {
+    const invoices = await db.query.InvoiceTable.findMany({
+      where: eq(InvoiceTable.accountId, accountId),
+      orderBy: [asc(InvoiceTable.expirationDate)],
+    });
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        invoices: invoices,
+      },
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      status: "error",
+      message: "Failed to get invoices",
+    });
+  }
+});
+
+//Update an invoice
+app.put("/api/invoices/:id", async (req, res) => {
+  const invoiceId = parseInt(req.params.id);
+  const { state } = req.body;
+
+  try {
+    const invoice = await db
+      .update(InvoiceTable)
+      .set({
+        state: state,
+      })
+      .where(eq(InvoiceTable.invoiceId, invoiceId))
+      .returning();
+
+    res.status(200).json({
+      status: "success",
+      message: "Invoice updated",
+      data: {
+        invoice: invoice,
+      },
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: "error",
+      message: "Failed to update invoice",
+    });
+    console.log(err);
+  }
+});
+
+//Delete an invoice
+app.delete("/api/invoices/:id", async (req, res) => {
+  const invoiceId = parseInt(req.params.id);
+
+  try {
+    const invoiceFile = await db.query.InvoiceTable.findFirst({
+      where: eq(InvoiceTable.invoiceId, invoiceId),
+    });
+
+    if (!invoiceFile) {
+      res.status(404).json({
+        status: "error",
+        message: "Invoice file doesn't exist",
+      });
+      return;
+    }
+
+    const filePath = path.join(
+      __dirname,
+      `uploads/files/${(invoiceFile.file as { filename: string }).filename}`
+    );
+
+    fs.unlink(filePath, (err: any) => {
+      if (err) {
+        res.status(500).json({
+          status: "error",
+          message: "Failed to delete file",
+        });
+      }
+    });
+
+    const invoice = await db
+      .delete(InvoiceTable)
+      .where(eq(InvoiceTable.invoiceId, invoiceId));
+
+    res.status(204).json({
+      status: "success",
+      message: "Invoice deleted",
+      data: {
+        invoice: invoice,
+      },
+    });
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+//Download an invoice
+app.get("/api/download/:filename", authenticateToken, (req, res) => {
+  const fileName = req.params;
+
+  const filePath = path.join(__dirname, `uploads/files/${fileName}`);
+  res.download(filePath, (err) => {
+    if (err) {
+      res.status(500).json({
+        status: "error",
+        message: "Failed to download file",
+      });
+    }
+  });
+});
+
+// Get all contact forms
 app.get("/api/contact", async (req, res) => {
   try {
     const forms = await db.query.ContactFormTable.findMany({
