@@ -1,18 +1,19 @@
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
+
+import { GiHamburgerMenu } from "react-icons/gi";
 
 const UPLOADS_URL = import.meta.env.VITE_APP_UPLOAD_URL;
 
 const Profile = () => {
   const { logout, user } = useAuth();
 
-  console.log("USER", user);
   return (
     <div className="group relative">
       {user.picture ? (
         <img
-          alt=""
+          alt="User profile"
           src={`${UPLOADS_URL}/profile_pictures/${user.picture}`}
           className="mx-5 inline-block size-10 rounded-full"
         />
@@ -30,22 +31,33 @@ const Profile = () => {
           />
         </svg>
       )}
-      <div className="absolute right-0 z-40 w-28 translate-y-[-50px] rounded-md bg-white p-1 opacity-0 shadow-lg transition-all duration-300 ease-in-out group-hover:block group-hover:translate-y-0 group-hover:opacity-100">
+
+      <div className="absolute left-1/2 top-full z-40 w-28 translate-x-[-50%] translate-y-[-10px] scale-95 rounded-md bg-white p-1 opacity-0 shadow-lg transition-all duration-300 ease-in-out group-hover:translate-y-0 group-hover:scale-100 group-hover:opacity-100">
         <div className="flex flex-col items-center">
-          <Link className="block text-black" to="/profil">
+          <Link to="/onas" className="block text-base text-black">
+            O nás
+          </Link>
+          <Link to="/kontakt" className="block text-base text-black">
+            Kontakt
+          </Link>
+          <Link className="block text-base text-black" to="/profil">
             Profil
           </Link>
+
           {user.role === "ADMIN" ? (
-            <div>
-              <Link className="block text-black" to="/admin">
-                Systém
+            <div className="flex flex-col items-center">
+              <Link className="block text-base text-black" to="/pouzivatelia">
+                Používatelia
               </Link>
-              <Link className="block text-black" to="/faktury">
+              <Link className="block text-base text-black" to="/faktury">
                 Faktúry
+              </Link>
+              <Link className="block text-base text-black" to="/formulare">
+                Formuláre
               </Link>
             </div>
           ) : (
-            <Link className="block text-black" to="/pouzivatel">
+            <Link className="block text-base text-black" to="/pouzivatel">
               Systém
             </Link>
           )}
@@ -60,17 +72,82 @@ const Profile = () => {
 
 export default function Header() {
   const { loggedIn } = useAuth();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef(null);
+
+  const toggleMenu = () => setMenuOpen(!menuOpen);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
-    <header>
+    <header className="flex items-center justify-between p-4">
       <Link className="site-logo" to="/">
         <img src="/src/assets/images/webBeaverLogo.png" alt="WebBeaver" />
       </Link>
-      <nav>
-        <Link to="/onas">O nás</Link>
-        <Link to="/kontakt">Kontakt</Link>
-      </nav>
-      {loggedIn ? <Profile /> : <Link to="/prihlasenie">Prihlásenie</Link>}
+
+      {loggedIn ? (
+        <Profile />
+      ) : (
+        <div className="">
+          <button
+            className="z-50 block text-white sm:hidden"
+            onClick={toggleMenu}
+          >
+            <GiHamburgerMenu className="text-2xl" />
+          </button>
+          <div
+            ref={menuRef}
+            className={`fixed right-0 top-0 z-50 w-[20vw] transform bg-white text-base shadow-lg transition-transform duration-300 ease-in-out sm:hidden ${menuOpen ? "translate-x-0" : "translate-x-full"}`}
+          >
+            <div className="flex flex-col items-center">
+              <Link
+                to="/onas"
+                className="block text-black"
+                onClick={toggleMenu}
+              >
+                O nás
+              </Link>
+              <Link
+                to="/kontakt"
+                className="block text-black"
+                onClick={toggleMenu}
+              >
+                Kontakt
+              </Link>
+              <Link
+                to="/prihlasenie"
+                className="block text-black"
+                onClick={toggleMenu}
+              >
+                Prihlásenie
+              </Link>
+            </div>
+          </div>
+
+          <div className="hidden space-x-4 sm:flex">
+            <Link to="/onas" className="text-white">
+              O nás
+            </Link>
+            <Link to="/kontakt" className="text-white">
+              Kontakt
+            </Link>
+            <Link to="/prihlasenie" className="text-white">
+              Prihlásenie
+            </Link>
+          </div>
+        </div>
+      )}
     </header>
   );
 }

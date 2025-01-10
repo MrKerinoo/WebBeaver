@@ -17,9 +17,12 @@ export default function Pouzivatelia() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  const [confrimDeleteModal, setConfirmDeleteModal] = useState(false);
   const [modalCreate, setModalCreate] = useState(false);
   const [selectedOption, setSelectedOption] = useState("USER");
   const [selectedUser, setSelectedUser] = useState(null);
+
+  const [errors, setErrors] = useState({ username: "", password: "" });
 
   const queryClient = useQueryClient();
 
@@ -75,6 +78,7 @@ export default function Pouzivatelia() {
       setPassword("");
       setSelectedOption("USER");
     }
+    setErrors({ username: "", password: "" });
   };
   const handleOptionChange = (e) => {
     setSelectedOption(e.target.value);
@@ -98,39 +102,63 @@ export default function Pouzivatelia() {
     setPassword(e.target.value);
   };
 
-  const userSchema = z.object({
-    username: z
-      .string()
-      .min(3, { message: "Meno musí mať aspoň 3 znaky" })
-      .max(20, { message: "Meno môže mať maximálne 20 znakov" }),
+  let userSchema;
+  if (selectedUser) {
+    userSchema = z.object({
+      username: z
+        .string()
+        .min(3, { message: "Meno musí mať aspoň 3 znaky" })
+        .max(20, { message: "Meno môže mať maximálne 20 znakov" }),
 
-    password: z
-      .string()
-      .min(6, { message: "Heslo musí mať aspoň 6 znakov" })
-      .max(20, { message: "Heslo musí mať maximálne 20 znakov" }),
+      role: z.enum(["USER", "ADMIN"], {
+        errorMap: () => ({ message: "Rola je povinná" }),
+      }),
+    });
+  } else {
+    userSchema = z.object({
+      username: z
+        .string()
+        .min(3, { message: "Meno musí mať aspoň 3 znaky" })
+        .max(20, { message: "Meno môže mať maximálne 20 znakov" }),
 
-    role: z.enum(["USER", "ADMIN"], {
-      errorMap: () => ({ message: "Rola je povinná" }),
-    }),
-  });
+      password: z
+        .string()
+        .min(6, { message: "Heslo musí mať aspoň 6 znakov" })
+        .max(20, { message: "Heslo musí mať maximálne 20 znakov" }),
 
-  // ZOBRAZOVAT ERRORY HNED POCAS PISANIA, NIE PO POTVRDENI
+      role: z.enum(["USER", "ADMIN"], {
+        errorMap: () => ({ message: "Rola je povinná" }),
+      }),
+    });
+  }
+
   const handleFormSubmit = (e) => {
     e.preventDefault();
 
     const form = e.target;
     const username = form.username.value.trim();
-    const password = form.password.value.trim();
 
-    const result = userSchema.safeParse({
-      username: username,
-      password: password,
-      role: selectedOption,
-    });
+    let result;
+    if (selectedUser) {
+      result = userSchema.safeParse({
+        username: username,
+        role: selectedOption,
+      });
+    } else {
+      const password = form.password.value.trim();
+      result = userSchema.safeParse({
+        username: username,
+        password: password,
+        role: selectedOption,
+      });
+    }
 
     if (!result.success) {
-      const errorMessages = result.error.errors.map((err) => err.message);
-      alert(errorMessages.join("\n"));
+      const newErrors = result.error.errors.reduce((acc, err) => {
+        acc[err.path[0]] = err.message;
+        return acc;
+      }, {});
+      setErrors(newErrors);
       return;
     }
 
@@ -138,7 +166,6 @@ export default function Pouzivatelia() {
       updateUserMutation.mutate({
         id: selectedUser.accountId,
         username: result.data.username,
-        password: result.data.password,
         role: result.data.role,
       });
     } else {
@@ -150,37 +177,33 @@ export default function Pouzivatelia() {
     }
 
     toggleModalCreate(null);
+    setErrors({ username: "", password: "" });
   };
-
-  /*
-  const userQuery = (id) => useQuery({
-    queryKey: ["users", id],
-    queryFn: () => getUserById(id),
-  });
-  */
 
   const accounts = usersQuery?.data?.data?.users || [];
 
   return (
-    <div>
+    <div className="flex flex-col justify-center">
       <div className="relative">
-        <div aria-hidden="true" className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-white" />
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 flex items-center justify-center pt-5"
+        >
+          <div className="w-[90vw] border-t border-white" />
         </div>
-        <div className="relative flex justify-center">
-          <h1 className="bg-primary px-3 text-6xl font-normal text-white">
-            POUŽÍVATELIA
-          </h1>
+        <div className="relative flex justify-center pt-5">
+          <span className="bg-primary px-3 text-4xl font-semibold text-white sm:text-5xl md:text-6xl">
+            Používatelia
+          </span>
         </div>
       </div>
       <div className="bg-primary px-4 pb-20 pt-10 sm:px-6 lg:px-8">
         <div className="px-10 sm:flex sm:items-center">
-          <div className="sm:flex-auto">
+          <div className="flex w-full flex-col items-center justify-between gap-5 md:flex-row md:gap-0">
             <h1 className="text-base font-semibold text-white">
               Tabuľka používateľov
             </h1>
-          </div>
-          <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+
             <button
               type="button"
               className="block rounded-md bg-secondary px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-white hover:text-secondary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
@@ -194,8 +217,8 @@ export default function Pouzivatelia() {
         <div className="mt-8 flow-root">
           <div className="overflow-x-auto">
             <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-              <div className="overflow-hidden shadow ring-1 ring-black/5 sm:rounded-lg">
-                <table className="min-w-full divide-y divide-gray-300">
+              <div className="shadow ring-1 ring-black/5 sm:rounded-lg">
+                <table className="w-[90vw] divide-y divide-gray-300">
                   <thead className="bg-gray-50">
                     <tr>
                       <th
@@ -239,7 +262,7 @@ export default function Pouzivatelia() {
                           {account.username}
                         </td>
                         <td className="whitespace-nowrap px-8 py-4 text-sm text-gray-500">
-                          {account.password}
+                          {account.accountId}
                         </td>
                         <td className="whitespace-nowrap px-8 py-4 text-sm text-gray-500">
                           {account.role}
@@ -293,36 +316,54 @@ export default function Pouzivatelia() {
               </button>
             </div>
             <form onSubmit={handleFormSubmit}>
-              <div className="mt-2">
-                <input
-                  id="username"
-                  name="username"
-                  type="text"
-                  value={username}
-                  onChange={handleUsernameChange}
-                  placeholder="Meno"
-                  className="mb-5 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-secondary sm:text-sm/6"
-                />
+              <div className="mt-2 space-y-4">
+                <div>
+                  <input
+                    id="username"
+                    name="username"
+                    type="text"
+                    value={username}
+                    onChange={handleUsernameChange}
+                    placeholder="Meno"
+                    className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-secondary sm:text-sm/6 ${
+                      errors.username ? "ring-red-500" : ""
+                    }`}
+                  />
+                  <p className="mt-1 h-5 text-sm text-red-500">
+                    {errors.username || "\u00A0"} {/* Non-breaking space */}
+                  </p>
+                </div>
 
-                <input
-                  id="password"
-                  name="password"
-                  type="text"
-                  value={password}
-                  onChange={handlePasswordChange}
-                  placeholder="Heslo"
-                  className="mb-5 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-secondary sm:text-sm/6"
-                />
+                {selectedUser ? null : (
+                  <div>
+                    <input
+                      id="password"
+                      name="password"
+                      type="text"
+                      value={password}
+                      onChange={handlePasswordChange}
+                      placeholder="Heslo"
+                      className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-secondary sm:text-sm/6 ${
+                        errors.password ? "ring-red-500" : ""
+                      }`}
+                    />
+                    <p className="mt-1 h-5 text-sm text-red-500">
+                      {errors.password || "\u00A0"} {/* Non-breaking space */}
+                    </p>
+                  </div>
+                )}
 
-                <select
-                  id="options"
-                  value={selectedOption}
-                  onChange={handleOptionChange}
-                  className="mb-5 mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-secondary sm:text-sm/6"
-                >
-                  <option value="ADMIN">ADMIN</option>
-                  <option value="USER">USER</option>
-                </select>
+                <div>
+                  <select
+                    id="options"
+                    value={selectedOption}
+                    onChange={handleOptionChange}
+                    className="mb-5 mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-secondary sm:text-sm/6"
+                  >
+                    <option value="ADMIN">ADMIN</option>
+                    <option value="USER">USER</option>
+                  </select>
+                </div>
               </div>
 
               <div className="flex justify-center">

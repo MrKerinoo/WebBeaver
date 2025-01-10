@@ -16,10 +16,32 @@ body {
   background-color: var(--primary);
 }
 
+/*
+padding: min(5em, 8%);
+
+rem - root element font-size
+font-size: clamp(1.8rem, 10vw + 1rem, 5rem);
+(10vw + 1rem) => supports zooming
+
+100dvh - also for mobile devices
+
+nav { 
+position: absolute;
+right: -16em;
+trainsition: right 200ms ease-in-out;
+}
+
+nav.show{
+right: 0;
+}
+
+?? set in JS -> inert - not clickable
+*/
+
 /*** HEADER ***/
 
 header {
-  height: 100px;
+  height: 10vh;
   display: flex;
   align-items: center;
   padding: 5px;
@@ -45,8 +67,6 @@ header a {
   padding: 5px 20px;
 }
 
-/*** FOOTER ***/
-
 /*** DOMOV ***/
 
 .main-container {
@@ -54,20 +74,20 @@ header a {
   background-size: cover;
   display: flex;
   flex-direction: column;
-  min-height: 500px;
+  min-height: 50vh;
   justify-content: center;
   align-items: center;
 }
 
 .main-container h1 {
   color: white;
-  font-size: 80px;
+  font-size: clamp(1rem, 3vw + 1rem, 5rem);
   text-transform: uppercase;
 }
 
 .main-container p {
   color: white;
-  font-size: 20px;
+  font-size: clamp(0.1rem, 1rem, 1.25rem);
   font-weight: 100;
 }
 
@@ -77,7 +97,8 @@ header a {
   border-radius: 10px;
   border: 1px solid #ffffff;
   padding: 20px;
-  width: 300px;
+  width: 100%;
+  max-width: 300px;
   height: 170px;
 }
 
@@ -90,20 +111,21 @@ header a {
   color: #f57e00;
   display: flex;
   align-items: center;
+  font-size: 1.5rem;
   margin-right: 5%;
 }
 
 .card h1 {
   color: white;
   text-transform: uppercase;
-  font-size: 20px;
+  font-size: clamp(1rem, 0.1vw + 1rem, 5rem);
   font-weight: 500;
   margin: 0;
 }
 
 .card p {
   color: white;
-  font-size: 17px;
+  font-size: clamp(0.25rem, 1rem, 1.25rem);
   text-align: left;
 }
 
@@ -113,11 +135,14 @@ header a {
   background-color: var(--tertiary);
   background-size: cover;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  min-height: 500px;
+  grid-template-columns: repeat(2, 300px);
+  height: auto;
   justify-content: center;
   justify-items: center;
   align-items: center;
+  padding-top: 5vh;
+  padding-bottom: 5vh;
+  gap: 2rem 10rem;
 }
 
 /*** NAŠE PROJEKTY ***/
@@ -127,17 +152,16 @@ header a {
   background-size: cover;
   display: flex;
   flex-direction: column;
-  min-height: 400px;
   align-items: center;
-  padding-top: 30px;
-  padding-bottom: 100px;
+  padding-top: 5vh;
+  padding-bottom: 5vh;
 }
 
 .home-projects h1 {
   color: white;
-  font-size: 50px;
+  font-size: clamp(1rem, 3vw + 1rem, 5rem);
   text-transform: uppercase;
-  margin-bottom: 75px;
+  margin-bottom: 5vh;
 }
 
 .home-projects-images {
@@ -157,95 +181,45 @@ header a {
   width: 100%;
 }
 
-/*** O NÁS ***/
-
-.about-container {
-  background-color: var(--tertiary);
-  display: flex;
-  flex-direction: column;
-  min-height: 700px;
-  justify-content: center;
-  align-items: center;
-}
-
-.about-container h1 {
-  color: white;
-  font-size: 50px;
-  text-transform: uppercase;
-  margin-bottom: 75px;
-}
-
-.person {
-  border-radius: 10px;
-  border: 1px solid #ffffff;
-  margin: 20px;
-  padding: 30px;
-  width: 250px;
-  height: 170px;
-}
-
-.persons-container {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-gap: 1rem 10rem;
-}
-
-.person-header {
-  display: flex;
-  align-items: center;
-}
-
-.person-icon {
-  color: var(--secondary);
-  display: flex;
-  align-items: center;
-  margin-right: 10%;
-}
-
-.person h1 {
-  color: white;
-  text-transform: uppercase;
-  font-size: 40px;
-  font-weight: 500;
-  margin: 0;
-}
-
-.person p {
-  color: white;
-  font-size: 17px;
-  text-align: center;
-}
-
 /*** KONTAKT ***/
 
 .contact-container {
   background-color: var(--tertiary);
   display: flex;
   flex-direction: column;
-  min-height: 800px;
+  height: auto;
   justify-content: center;
   align-items: center;
+  padding: 5vh 5vh;
 }
 
 .contact-container h1 {
   color: white;
-  font-size: 50px;
+  font-size: clamp(1rem, 3vw + 1rem, 5rem);
   text-transform: uppercase;
-  margin-bottom: 75px;
 }
 
 .contact-form {
   display: grid;
+  width: 50vw;
   grid-template-columns: repeat(2, 1fr);
-  flex-direction: column;
   grid-gap: 0.5rem 2rem;
 }
 
 .contact-textarea {
   display: flex;
   flex-direction: column;
-  width: 700px;
+  width: 50vw;
   padding-bottom: 2rem;
+}
+
+/*** O NAS ***/
+
+.team-container {
+  display: grid;
+  grid-template-columns: repeat(2, 200px);
+  justify-content: center;
+  gap: 1.5rem;
 }
 
 /*** InputField ***/
@@ -267,9 +241,7 @@ header a {
 }
 
 .input-textarea {
-  padding: 25px 25px 25px;
-  grid-column: span 2;
-  min-height: 100px;
+  padding: 20px;
 }
 
 .submit-button {
@@ -294,7 +266,6 @@ header a {
   outline-offset: 2px;
 }
 
-/* Add this to your CSS file */
 .contact-submit-button {
   width: 30%;
   border-radius: 0.375rem;
@@ -320,79 +291,78 @@ header a {
 /** LAPTOP **/
 
 @media (max-width: 1440px) {
-  .main-container h1 {
-    font-size: 70px;
-  }
-
   .card {
     width: 250px;
-    height: 150px;
   }
 
-  .card h1 {
-    font-size: 17px;
-  }
-
-  .card p {
-    font-size: 15px;
+  .contact-textarea {
+    width: 100%;
   }
 }
 
 /** TABLET **/
 
 @media (max-width: 768px) {
+  .contact-container h1 {
+    font-size: clamp(1rem, 2vw + 1rem, 3rem);
+  }
+
   header .site-logo {
-    max-width: 30%;
+    max-width: 40%;
   }
 
-  .main-container h1 {
-    font-size: 50px;
+  .home-services {
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 1.5rem;
   }
 
-  .home-projects h1 {
-    font-size: 50px;
-  }
-
-  .home-projects {
-    min-height: 100px;
+  .home-projects-images {
+    grid-template-columns: 1fr;
+    grid-gap: 4rem;
+    width: 50%;
   }
 
   .card {
-    width: 180px;
-    height: 200px;
+    width: 250px;
+    height: 30vh;
   }
 
   .card-icon {
     margin-right: 10%;
   }
 
-  .card h1 {
-    font-size: 15px;
+  .card-header {
+    padding-bottom: 0.25rem;
   }
 
-  .card p {
-    font-size: 13px;
-  }
-
-  .persons-container {
-    grid-gap: 1rem 3rem;
-  }
-
-  .input-field {
-    width: 200px;
+  .contact-form {
+    grid-template-columns: repeat(1, 1fr);
+    width: 80vw;
   }
 
   .submit-button {
     padding: 10px 25px 10px;
     width: 150px;
   }
+
+  .contact-submit-button {
+    width: 100%;
+  }
 }
 
 /** MOBIL L **/
 
-@media (max-width: 425px) {
-  header .site-logo {
-    max-width: 40%;
+@media (max-width: 560px) {
+  .main-container h1 {
+    font-size: clamp(1rem, 2vw + 1rem, 3rem);
+  }
+
+  .contact-container h1 {
+    font-size: clamp(1rem, 3vw + 1rem, 3rem);
+  }
+
+  .main-container {
+    min-height: 30vh;
   }
 
   header a {
@@ -400,59 +370,27 @@ header a {
     font-size: 12px;
   }
 
-  .main-container {
-    min-height: 300px;
-  }
-
-  .main-container h1 {
-    font-size: 30px;
-  }
-
-  .home-projects h1 {
-    font-size: 30px;
+  header .site-logo {
+    max-width: 50%;
   }
 
   .home-services {
     grid-template-columns: 1fr;
-    grid-gap: 1rem;
+    gap: 2rem 10rem;
+    height: auto;
+    padding: 5vh 5vh;
+  }
+
+  .home-projects-images a {
+    width: 100%;
   }
 
   .card {
-    width: 200px;
-    height: 130px;
-  }
-
-  .card h1 {
-    font-size: 13px;
-  }
-
-  .card p {
-    font-size: 12px;
-  }
-
-  .home-projects-images {
-    grid-template-columns: 1fr;
-    grid-gap: 4rem;
-  }
-
-  .persons-container {
-    grid-template-columns: repeat(1, 1fr);
-  }
-
-  .about-container h1 {
-    font-size: 40px;
-  }
-
-  .contact-container h1 {
-    font-size: 30px;
+    height: 30vh;
   }
 
   .contact-form {
     grid-template-columns: repeat(1, 1fr);
-  }
-
-  .input-field {
-    width: 250px;
   }
 
   .submit-button {
@@ -465,26 +403,10 @@ header a {
 
 @media (max-width: 320px) {
   header .site-logo {
-    max-width: 30%;
+    max-width: 70%;
   }
 
-  .main-container h1 {
-    font-size: 20px;
-  }
-
-  .home-projects h1 {
-    font-size: 30px;
-  }
-
-  .main-container p {
-    font-size: 15px;
-  }
-
-  .person {
-    padding: 15px;
-  }
-
-  .input-field {
-    width: 200px;
+  .team-container {
+    grid-template-columns: 1fr;
   }
 }

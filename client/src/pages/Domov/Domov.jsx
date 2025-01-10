@@ -4,35 +4,36 @@ import { Link } from "react-router-dom";
 import Card from "/src/components/Card";
 import { useAuth } from "/src/hooks/useAuth";
 
-import DevicesIcon from "@mui/icons-material/Devices";
-import NewspaperIcon from "@mui/icons-material/Newspaper";
-import LightbulbIcon from "@mui/icons-material/Lightbulb";
+import { HiCode } from "react-icons/hi";
+import { HiOutlineDocumentText } from "react-icons/hi";
+import { HiOutlineBriefcase } from "react-icons/hi";
+import { HiOutlineSearch } from "react-icons/hi";
 
 export default function Domov() {
-  const { loggedIn, user } = useAuth();
-
-  useEffect(() => {
-    console.log(user);
-  });
-
   const services = [
     {
       id: 1,
       heading: "Tvorba webstránok",
       text: "Tvorba internetových stránok podľa vaších predstáv alebo to môžete nechať na nás a my sa o to postaráme.",
-      icon: <DevicesIcon />,
+      icon: <HiCode />,
     },
     {
       id: 2,
       heading: "Stratégia obsahu",
       text: "Naše popisy k stránkam bývajú posudzované expertmi, aby neboli zbytočne zdĺhavé a zložité, ale krátke a výstižné.",
-      icon: <NewspaperIcon />,
+      icon: <HiOutlineDocumentText />,
     },
     {
       id: 3,
-      heading: "Obchodné poradenstvo",
+      heading: "Poradenstvo",
       text: "Dokážeme Vám pomôcť s marketingom Vašej značky a následným rozvojom.",
-      icon: <LightbulbIcon />,
+      icon: <HiOutlineBriefcase />,
+    },
+    {
+      id: 4,
+      heading: "SEO optimalizácia",
+      text: "Zabezpečíme, aby bola vaša stránka viditeľná na internete a dosiahla lepšie hodnotenia vo vyhľadávačoch.",
+      icon: <HiOutlineSearch />,
     },
   ];
 
@@ -75,7 +76,7 @@ export default function Domov() {
   ));
 
   return (
-    <div className="w-full">
+    <div className="">
       <div className="main-container">
         <h1>Moderné webové stránky</h1>
         <p>Dizajn, tvorba a údržba</p>

@@ -39,9 +39,8 @@ export default function Prihlasenie() {
   const loginUserMutation = useMutation({
     mutationFn: loginUser,
     onSuccess: (data) => {
-      console.log("PRIHLASENY", data);
       login(data);
-      navigate("/admin");
+      navigate("/pouzivatelia");
     },
     onError: (error) => {
       if (error.response.data.type === "name") {
@@ -86,19 +85,19 @@ export default function Prihlasenie() {
           alt="WebBeaver."
           className="h-auto w-20"
         />
-        <h1 className="p-10 text-5xl">Prihlásiť sa</h1>
+        <h1 className="p-10 text-5xl sm:text-6xl">Prihlásiť sa</h1>
         <form onSubmit={handleFormSubmit}>
           <label htmlFor="username" className="block text-base font-medium">
             Používateľské meno
           </label>
-          <div className="mt-2 w-[400px]">
+          <div className="mt-2">
             <input
               id="username"
               name="username"
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className={`block w-full rounded-md border-2 py-1.5 text-gray-900 shadow-sm placeholder:text-gray-400 focus:outline-none sm:text-sm ${
+              className={`block w-[70vw] rounded-md border-2 py-1.5 text-gray-900 shadow-sm placeholder:text-gray-400 focus:outline-none sm:w-[50vw] sm:text-sm md:w-[40vw] lg:w-[30vw] ${
                 errors.username
                   ? "border-red-500"
                   : "border-gray-300 focus:border-secondary"
@@ -114,14 +113,14 @@ export default function Prihlasenie() {
           >
             Heslo
           </label>
-          <div className="relative mt-2 w-[400px]">
+          <div className="relative mt-2">
             <input
               id="password"
               name="password"
               type={showPassword ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className={`block w-full rounded-md border-2 py-1.5 text-gray-900 shadow-sm placeholder:text-gray-400 focus:outline-none sm:text-sm ${
+              className={`block w-[70vw] rounded-md border-2 py-1.5 text-gray-900 shadow-sm placeholder:text-gray-400 focus:outline-none sm:w-[50vw] sm:text-sm md:w-[40vw] lg:w-[30vw] ${
                 errors.password
                   ? "border-red-500"
                   : "border-gray-300 focus:border-secondary"
@@ -142,7 +141,7 @@ export default function Prihlasenie() {
           <p className="mt-2 h-5 text-sm text-red-500">
             {errors.password || "\u00A0"}
           </p>
-          <div className="mt-6 flex justify-center">
+          <div className="my-6 flex justify-center">
             <button type="submit" className="submit-button">
               Prihlásiť sa
             </button>

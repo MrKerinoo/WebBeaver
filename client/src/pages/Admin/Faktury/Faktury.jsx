@@ -28,16 +28,11 @@ export default function Faktury() {
   const [file, setFile] = useState(null);
 
   useEffect(() => {
-    console.log(selectedUser);
-  }, [selectedUser]);
-
-  useEffect(() => {
     if (modalOpen) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "auto";
     }
-
     return () => {
       document.body.style.overflow = "auto";
     };
@@ -78,7 +73,6 @@ export default function Faktury() {
   });
 
   const handleUpdateClick = (invoice) => {
-    console.log("INVOICE", invoice);
     toggleModalChange(invoice);
   };
 
@@ -93,7 +87,6 @@ export default function Faktury() {
 
   const handleDeleteClick = (id) => {
     const confirmDelete = window.confirm("Naozaj chcete odstrániť faktúru?");
-    console.log("DELETE", id, confirmDelete);
     if (confirmDelete) {
       deleteInvoiceMutation.mutate(id);
     }
@@ -152,10 +145,24 @@ export default function Faktury() {
   const invoices = invoicesQuery?.data?.data?.invoices || [];
 
   return (
-    <div>
+    <div className="flex flex-col justify-center">
+      <div className="relative">
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 flex items-center justify-center pt-5"
+        >
+          <div className="w-[90vw] border-t border-white" />
+        </div>
+        <div className="relative flex justify-center pt-5">
+          <span className="bg-primary px-3 text-4xl text-white sm:text-5xl md:text-6xl">
+            Faktúry
+          </span>
+        </div>
+      </div>
+
       <div className="flex justify-center">
         <form onSubmit={handleSubmit}>
-          <div className="mt-2 grid grid-cols-1">
+          <div className="mt-10 grid grid-cols-1">
             <select
               id="options"
               value={selectedUser}
@@ -180,11 +187,11 @@ export default function Faktury() {
         </form>
       </div>
 
-      <div className="mt-8 flow-root">
+      <div className="my-10 flex justify-center">
         <div className="overflow-x-auto">
           <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-            <div className="overflow-hidden shadow ring-1 ring-black/5 sm:rounded-lg">
-              <table className="min-w-full divide-y divide-gray-300">
+            <div className="shadow ring-1 ring-black/5 sm:rounded-lg">
+              <table className="w-[90vw] divide-y divide-gray-300">
                 <thead className="bg-gray-50">
                   <tr>
                     <th

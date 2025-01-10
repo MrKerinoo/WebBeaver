@@ -79,6 +79,17 @@ const userSchema = z.object({
   }),
 });
 
+const updateUserSchema = z.object({
+  username: z
+    .string()
+    .min(3, { message: "Meno musí mať aspoň 3 znaky" })
+    .max(20, { message: "Meno môže mať maximálne 20 znakov" }),
+
+  role: z.enum(["USER", "ADMIN"], {
+    errorMap: () => ({ message: "Rola je povinná" }),
+  }),
+});
+
 const profileSchema = z.object({
   firstName: z
     .string()
@@ -237,12 +248,11 @@ app.post("/api/users", async (req, res) => {
 
 // Update a User
 app.put("/api/users/:id", async (req, res) => {
-  const { username, password, role } = userSchema.parse(req.body);
+  const { username, role } = updateUserSchema.parse(req.body);
 
   try {
-    const result = userSchema.safeParse({
+    const result = updateUserSchema.safeParse({
       username: username,
-      password: password,
       role: role,
     });
 
@@ -258,14 +268,12 @@ app.put("/api/users/:id", async (req, res) => {
       return;
     }
 
-    const hashedPassword = await bcrypt.hash(result.data.password, 13);
-
+    console.log("SKONTROLOVAL SOM SPRAVNE", result.data);
     const accountId = parseInt(req.params.id);
     const user = await db
       .update(AccountTable)
       .set({
         username: result.data.username,
-        password: hashedPassword,
         role: result.data.role,
       })
       .where(eq(AccountTable.accountId, accountId));
@@ -321,7 +329,6 @@ app.post("/api/profiles/:id", async (req, res) => {
   const accountId = parseInt(req.params.id);
   const { firstName, lastName, email, iban, phone, picture } = req.body;
 
-  console.log("LOGUJEM TU DATA", accountId, req.body);
   try {
     const result = profileSchema.safeParse({
       firstName: firstName,
@@ -613,8 +620,6 @@ app.post(
 
     const { accountId, expirationDate } = invoiceData;
 
-    console.log("INVOICE DATA", invoiceData);
-    console.log("FILE", file);
     try {
       const invoice = await db.insert(InvoiceTable).values({
         file: file,
@@ -839,7 +844,7 @@ app.post("/api/contact", async (req, res) => {
       status: "success",
       message: "Kontaktný formulár bol úspešne odoslaný",
       data: {
-        //contact: contact,
+        contact: contact,
       },
     });
   } catch (err) {

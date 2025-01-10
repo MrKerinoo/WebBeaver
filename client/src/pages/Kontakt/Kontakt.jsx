@@ -170,9 +170,7 @@ export default function Kontakt() {
           </label>
           <div className="contact-textarea">
             <textarea
-              className={`input-textarea ${
-                errors.message ? "border-red-500" : ""
-              }`}
+              className={`${errors.message ? "border-red-500" : ""}`}
               id="message"
               name="message"
               type="text"

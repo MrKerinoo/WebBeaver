@@ -13,13 +13,12 @@ import Domov from "./pages/Domov/Domov";
 import Kontakt from "./pages/Kontakt/Kontakt";
 import Onas from "./pages/Onas/Onas";
 
-import PouzivatelInfo from "./pages/Admin/Pouzivatelia/PouzivatelInfo";
-import PouzivatelUpravit from "./pages/Admin/Pouzivatelia/PouzivatelUpravit";
 import Prihlasenie from "./pages/Prihlasenie/Prihlasenie";
 import Profil from "./pages/Profil/Profil";
-import Admin from "./pages/Admin/Admin.jsx";
 import Faktury from "./pages/Admin/Faktury/Faktury.jsx";
 import Pouzivatel from "./Pouzivatel/Pouzivatel.jsx";
+import Pouzivatelia from "./pages/Admin/Pouzivatelia/Pouzivatelia.jsx";
+import Formulare from "./pages/Admin/Formulare.jsx";
 
 const queryClient = new QueryClient();
 
@@ -45,7 +44,7 @@ export default function App() {
           <StrictMode>
             <div className="flex min-h-screen flex-col">
               <Header />
-              <main className="flex flex-1 items-center justify-center">
+              <main className="flex-grow">
                 <Routes>
                   <Route path="/" element={<Domov />} />
                   <Route path="/kontakt" element={<Kontakt />} />
@@ -53,10 +52,19 @@ export default function App() {
                   <Route path="/prihlasenie" element={<Prihlasenie />} />
 
                   <Route
-                    path="/admin"
+                    path="/pouzivatelia"
                     element={
                       <ProtectedRoute roles={["ADMIN"]}>
-                        <Admin />
+                        <Pouzivatelia />
+                      </ProtectedRoute>
+                    }
+                  />
+
+                  <Route
+                    path="/formulare"
+                    element={
+                      <ProtectedRoute roles={["ADMIN"]}>
+                        <Formulare />
                       </ProtectedRoute>
                     }
                   />
@@ -86,12 +94,6 @@ export default function App() {
                         <Profil />
                       </ProtectedRoute>
                     }
-                  />
-
-                  <Route path="/pouzivatel/:id" element={<PouzivatelInfo />} />
-                  <Route
-                    path="/pouzivatel/:id/upravit"
-                    element={<PouzivatelUpravit />}
                   />
                   {/* DOROBIT NOT FOUND PAGE <Route Component={<NenaslaSa/>} /> */}
                 </Routes>

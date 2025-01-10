@@ -20,7 +20,6 @@ export default function FileUploader({ setFile, types }) {
   function handleFileChange(e) {
     if (e.target.files) {
       const file = e.target.files[0];
-      console.log(file);
       setLocalFile(file);
       setFile(file);
     }

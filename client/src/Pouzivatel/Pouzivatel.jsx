@@ -19,21 +19,23 @@ export default function Pouzivatel() {
 
   const invoices = invoicesQuery?.data?.data?.invoices || [];
 
-  console.log(invoices);
   return (
-    <div className="w-1/2">
+    <div>
       <div className="relative">
-        <div aria-hidden="true" className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-white" />
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 flex items-center justify-center pt-5"
+        >
+          <div className="w-[90vw] border-t border-white" />
         </div>
-        <div className="relative flex justify-center">
-          <h1 className="bg-primary px-3 text-6xl font-normal text-white">
-            Zákaznícky systém
-          </h1>
+        <div className="relative flex justify-center pt-5">
+          <span className="bg-primary px-3 text-4xl font-semibold text-white sm:text-5xl md:text-6xl">
+            Faktúry
+          </span>
         </div>
       </div>
-      <div className="flex flex-col gap-y-4 pt-10">
-        <h1 className="text-xl text-white">Vaše faktúry</h1>
+      <div className="flex flex-col items-center gap-y-4 pt-10">
+        <h1 className="text-xl text-white">Zoznam vašich faktúr</h1>
         <ul role="list" className="grid grid-cols-2 gap-4 divide-y">
           {invoices.map((invoice, index) => (
             <li
