@@ -326,7 +326,7 @@ export default function Pouzivatelia() {
                       errors.username ? "ring-red-500" : ""
                     }`}
                   />
-                  <p className="mt-1 h-5 text-sm text-red-500">
+                  <p className="mt-1 h-5 text-xs text-red-500 lg:text-sm">
                     {errors.username || "\u00A0"} {/* Non-breaking space */}
                   </p>
                 </div>
@@ -344,7 +344,7 @@ export default function Pouzivatelia() {
                         errors.password ? "ring-red-500" : ""
                       }`}
                     />
-                    <p className="mt-1 h-5 text-sm text-red-500">
+                    <p className="mt-1 h-5 text-xs text-red-500 lg:text-sm">
                       {errors.password || "\u00A0"} {/* Non-breaking space */}
                     </p>
                   </div>

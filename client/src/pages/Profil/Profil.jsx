@@ -161,7 +161,9 @@ export default function Profil() {
         placeHolder={field.placeHolder}
         error={!!field.error}
       />
-      <p className="mt-1 h-5 text-sm text-red-500">{field.error || "\u00A0"}</p>
+      <p className="mt-1 h-5 text-xs text-red-500 lg:text-sm">
+        {field.error || "\u00A0"}
+      </p>
     </div>
   ));
 

@@ -191,12 +191,16 @@ export default function Faktury() {
             <h1 className="text-xl text-white">Vložiť faktúru</h1>
             <FileUploader setFile={setFile} types={false} />
           </div>
-          <button type="submit" className="submit-button">
-            Nahrať faktúru
-          </button>
-          {fileError && (
-            <p className="mt-2 text-sm text-red-500">{fileError}</p>
-          )}
+          <div className="flex justify-center">
+            <button type="submit" className="submit-button">
+              Nahrať faktúru
+            </button>
+            {fileError && (
+              <p className="mt-2 text-xs text-red-500 lg:text-sm">
+                {fileError}
+              </p>
+            )}
+          </div>
         </form>
       </div>
 

@@ -152,7 +152,9 @@ export default function Kontakt() {
         placeHolder={field.placeHolder}
         error={!!field.error}
       />
-      <p className="mt-1 h-5 text-sm text-red-500">{field.error || "\u00A0"}</p>
+      <p className="mt-1 h-5 text-xs text-red-500 lg:text-sm">
+        {field.error || "\u00A0"}
+      </p>
     </div>
   ));
 
@@ -170,7 +172,7 @@ export default function Kontakt() {
           <div className="contact-form">{fieldsItems}</div>
           <label
             htmlFor="textarea"
-            className="block text-base/8 font-medium text-white"
+            className="block pt-4 text-base/8 font-medium text-white md:pt-0"
           >
             Vaša správa
           </label>
@@ -184,7 +186,7 @@ export default function Kontakt() {
               onChange={(e) => setMessage(e.target.value)}
               placeholder="Vaša správa"
             />
-            <p className="mt-1 h-5 text-sm text-red-500">
+            <p className="mt-1 h-5 text-xs text-red-500 lg:text-sm">
               {errors.message || "\u00A0"}
             </p>
           </div>
