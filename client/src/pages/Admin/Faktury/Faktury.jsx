@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import FileUploader from "../../../components/FileUploader";
-import { useAuth } from "../../../hooks/useAuth";
+import Modal from "../../../components/Modal";
 import {
   uploadInvoice,
   getInvoices,
@@ -12,8 +12,6 @@ import { getUsers } from "../../../api/userApi";
 import { MdClose } from "react-icons/md";
 
 export default function Faktury() {
-  //const { user } = useAuth();
-
   const usersQuery = useQuery({
     queryKey: ["users"],
     queryFn: getUsers,
@@ -23,9 +21,11 @@ export default function Faktury() {
 
   const [selectedUser, setSelectedUser] = useState(accounts[0]);
   const [modalOpen, setModalOpen] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [selectedInvoice, setSelectedInvoice] = useState(null);
   const [selectedState, setSelectedState] = useState("NEZAPLATENÁ");
   const [file, setFile] = useState(null);
+  const [fileError, setFileError] = useState("");
 
   useEffect(() => {
     if (modalOpen) {
@@ -103,6 +103,11 @@ export default function Faktury() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    if (!file) {
+      setFileError("Nenahrali ste žiadnu faktúru!");
+      return;
+    }
+
     try {
       const formData = new FormData();
       if (file) {
@@ -111,7 +116,7 @@ export default function Faktury() {
           "invoiceData",
           JSON.stringify({
             expirationDate: new Date(),
-            account: selectedUser,
+            accountId: selectedUser,
           }),
         );
       } else {
@@ -122,6 +127,9 @@ export default function Faktury() {
       uploadInvoiceMutation.mutate({
         formData,
       });
+
+      setFileError("");
+      setShowModal(true);
     } catch (error) {
       console.error("Error updating invoice:", error);
     }
@@ -169,11 +177,13 @@ export default function Faktury() {
               onChange={handleSelectedUserChange}
               className="focus:outline-3 col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pl-3 pr-8 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:-outline-offset-2 focus:outline-secondary sm:text-sm/6"
             >
-              {accounts.map((account) => (
-                <option key={account.accountId} value={account.accountId}>
-                  {account.username}
-                </option>
-              ))}
+              {accounts
+                .filter((account) => account.role === "USER")
+                .map((account) => (
+                  <option key={account.accountId} value={account.accountId}>
+                    {account.username}
+                  </option>
+                ))}
             </select>
           </div>
 
@@ -184,6 +194,9 @@ export default function Faktury() {
           <button type="submit" className="submit-button">
             Nahrať faktúru
           </button>
+          {fileError && (
+            <p className="mt-2 text-sm text-red-500">{fileError}</p>
+          )}
         </form>
       </div>
 
@@ -198,7 +211,7 @@ export default function Faktury() {
                       scope="col"
                       className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                     >
-                      ID
+                      Meno a Priezvisko
                     </th>
                     <th
                       scope="col"
@@ -232,7 +245,13 @@ export default function Faktury() {
                   {invoices.map((invoice) => (
                     <tr key={invoice.invoiceId}>
                       <td className="whitespace-nowrap px-8 py-4 text-sm font-medium text-gray-900 sm:pl-6">
-                        {invoice.accountId}
+                        {(() => {
+                          const account = accounts.find(
+                            (account) =>
+                              account.accountId === invoice.accountId,
+                          );
+                          return `${account.firstName} ${account.lastName}`;
+                        })()}
                       </td>
                       <td className="whitespace-nowrap px-8 py-4 text-sm text-gray-500">
                         {invoice.state}
@@ -308,6 +327,11 @@ export default function Faktury() {
           </div>
         </div>
       )}
+      <Modal show={showModal} onClose={() => setShowModal(false)}>
+        <h1 className="text-center text-2xl text-white">
+          Faktúra bola úspešne vytvorená!
+        </h1>
+      </Modal>
     </div>
   );
 }

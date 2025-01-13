@@ -1,8 +1,7 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 
 import Card from "/src/components/Card";
-import { useAuth } from "/src/hooks/useAuth";
 
 import { HiCode } from "react-icons/hi";
 import { HiOutlineDocumentText } from "react-icons/hi";

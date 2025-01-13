@@ -16,8 +16,8 @@ import Onas from "./pages/Onas/Onas";
 import Prihlasenie from "./pages/Prihlasenie/Prihlasenie";
 import Profil from "./pages/Profil/Profil";
 import Faktury from "./pages/Admin/Faktury/Faktury.jsx";
-import Pouzivatel from "./Pouzivatel/Pouzivatel.jsx";
 import Pouzivatelia from "./pages/Admin/Pouzivatelia/Pouzivatelia.jsx";
+import Pouzivatel from "./pages/Pouzivatel/Pouzivatel.jsx";
 import Formulare from "./pages/Admin/Formulare.jsx";
 
 const queryClient = new QueryClient();
@@ -30,7 +30,6 @@ const ProtectedRoute = ({ children, roles }) => {
   }
 
   if (!user || !roles.includes(user.role)) {
-    // ZOBRAZIT OKNO - UZIVATEL NEMA PRAVA
     return <Navigate to="/" />;
   }
   return children;
@@ -95,7 +94,6 @@ export default function App() {
                       </ProtectedRoute>
                     }
                   />
-                  {/* DOROBIT NOT FOUND PAGE <Route Component={<NenaslaSa/>} /> */}
                 </Routes>
               </main>
               <Footer />

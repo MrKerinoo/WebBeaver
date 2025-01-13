@@ -4,8 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 
 import InputField from "/src/components/InputField";
 import { sendContactForm } from "/src/api/contactApi";
-
-import { MdClose } from "react-icons/md";
+import Modal from "/src/components/Modal";
 
 export default function Kontakt() {
   const [firstName, setFirstName] = useState("");
@@ -94,6 +93,13 @@ export default function Kontakt() {
       });
 
       setShowModal(true);
+      setErrors({
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: "",
+        message: "",
+      });
     } catch (error) {
       console.error("Error submitting contact form", error);
     }
@@ -190,28 +196,12 @@ export default function Kontakt() {
           </div>
         </form>
       </div>
-      {showModal && (
-        <div
-          className="fixed inset-0 flex items-center justify-center bg-black/30"
-          onClick={(e) => {
-            if (e.target === e.currentTarget) {
-              setShowModal(false);
-            }
-          }}
-        >
-          <div className="relative w-[400px] rounded-lg border-2 border-secondary bg-primary p-6">
-            <button
-              className="absolute right-2 top-2 text-white hover:text-secondary"
-              onClick={() => setShowModal(false)}
-            >
-              <MdClose className="text-2xl" />
-            </button>
-            <h1 className="text-center text-2xl text-white">
-              Správa bola úspešne odoslaná!
-            </h1>
-          </div>
-        </div>
-      )}
+
+      <Modal show={showModal} onClose={() => setShowModal(false)}>
+        <h1 className="text-center text-2xl text-white">
+          Správa bola úspešne odoslaná!
+        </h1>
+      </Modal>
     </div>
   );
 }

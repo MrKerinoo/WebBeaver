@@ -7,8 +7,8 @@ export default function Footer() {
   };
 
   return (
-    <footer className="w-full bg-tertiary pb-5 pt-10">
-      <div className="flex justify-center pb-10">
+    <footer className="w-full bg-tertiary py-5">
+      <div className="flex justify-center pb-5">
         <nav className="flex w-full max-w-96 justify-between">
           <Link to="/onas" className="w-full text-center text-white">
             O nás

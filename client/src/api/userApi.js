@@ -9,7 +9,6 @@ export const getUsers = async () => {
     const response = await api.get(`${API_URL}/users`);
     return response.data;
   } catch (error) {
-    console.error("Error fetching users:", error);
     throw error;
   }
 };
@@ -19,7 +18,6 @@ export const getUserById = async (id) => {
     const response = await api.get(`${API_URL}/users/${id}`);
     return response.data;
   } catch (error) {
-    console.error(`Error fetching user with ID ${id}:`, error);
     throw error;
   }
 };
@@ -29,7 +27,6 @@ export const createUser = async (userData) => {
     const response = await api.post(`${API_URL}/users/`, userData);
     return response.data;
   } catch (error) {
-    console.error("Error creating user:", error);
     throw error;
   }
 };
@@ -39,7 +36,6 @@ export const updateUser = async (id, userData) => {
     const response = await api.put(`${API_URL}/users/${id}`, userData);
     return response.data;
   } catch (error) {
-    console.error(`Error updating user with ID ${id}:`, error);
     throw error;
   }
 };
@@ -49,7 +45,6 @@ export const deleteUser = async (id) => {
     const response = await api.delete(`${API_URL}/users/${id}`);
     return response.data;
   } catch (error) {
-    console.error(`Error deleting user with ID ${id}:`, error);
     throw error;
   }
 };
@@ -59,7 +54,6 @@ export const updateProfile = async (id, userData) => {
     const response = await api.post(`${API_URL}/profiles/${id}`, userData);
     return response.data;
   } catch (error) {
-    console.error(`Error updating user with ID ${id}:`, error);
     throw error;
   }
 };

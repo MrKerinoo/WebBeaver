@@ -93,26 +93,23 @@ const updateUserSchema = z.object({
 const profileSchema = z.object({
   firstName: z
     .string()
-    .min(3, { message: "Meno musí mať aspoň 3 znaky" })
-    .max(20, { message: "Meno môže mať maximálne 20 znakov" }),
+    .min(3, { message: "Meno musí mať aspoň 3 znaky!" })
+    .max(20, { message: "Meno môže mať maximálne 20 znakov!" }),
 
   lastName: z
     .string()
-    .min(3, { message: "Meno musí mať aspoň 3 znaky" })
-    .max(20, { message: "Meno môže mať maximálne 20 znakov" }),
+    .min(3, { message: "Priezvisko musí mať aspoň 3 znaky!" })
+    .max(20, { message: "Priezvisko môže mať maximálne 20 znakov!" }),
 
-  email: z.string().email({ message: "Emailová adresa musí byť platná." }),
+  email: z.string().email({ message: "Emailová adresa musí byť platná!" }),
 
-  phone: z.string().regex(/^\+?\d{10,12}$/, {
-    message: "Telefónne číslo musí byť platné a obsahovať 10-12 číslic.",
+  phone: z.string().regex(/^\+?\d{10,12}(\s?\d{1,})*$/, {
+    message: "Telefónne číslo musí byť platné a obsahovať 10-12 číslic!",
   }),
 
-  iban: z
-    .string()
-    .regex(/^SK\d{2}\d{4}\d{6}\d{10}$/, {
-      message: "IBAN musí byť platný slovenský IBAN.",
-    })
-    .length(24, { message: "IBAN musí mať presne 24 znakov." }),
+  iban: z.string().regex(/^SK\d{22}$/, {
+    message: "IBAN musí mať 24 čísiel a byť bez medzier!",
+  }),
 });
 
 const loginSchema = z.object({
@@ -174,7 +171,7 @@ app.get("/api/users", authenticateToken, async (req, res) => {
 });
 
 // Get a User
-app.get("/api/users/:id", async (req, res) => {
+app.get("/api/users/:id", authenticateToken, async (req, res) => {
   try {
     const accountId = parseInt(req.params.id);
 
@@ -199,7 +196,7 @@ app.get("/api/users/:id", async (req, res) => {
 });
 
 // Create a User
-app.post("/api/users", async (req, res) => {
+app.post("/api/users", authenticateToken, async (req, res) => {
   const { username, password, role } = req.body;
 
   try {
@@ -247,8 +244,8 @@ app.post("/api/users", async (req, res) => {
 });
 
 // Update a User
-app.put("/api/users/:id", async (req, res) => {
-  const { username, role } = updateUserSchema.parse(req.body);
+app.put("/api/users/:id", authenticateToken, async (req, res) => {
+  const { username, role } = req.body;
 
   try {
     const result = updateUserSchema.safeParse({
@@ -295,7 +292,7 @@ app.put("/api/users/:id", async (req, res) => {
 });
 
 // Delete a User
-app.delete("/api/users/:id", async (req, res) => {
+app.delete("/api/users/:id", authenticateToken, async (req, res) => {
   try {
     const accountId = parseInt(req.params.id);
 
@@ -325,7 +322,7 @@ app.delete("/api/users/:id", async (req, res) => {
 });
 
 //Update a profile
-app.post("/api/profiles/:id", async (req, res) => {
+app.post("/api/profiles/:id", authenticateToken, async (req, res) => {
   const accountId = parseInt(req.params.id);
   const { firstName, lastName, email, iban, phone, picture } = req.body;
 
@@ -560,12 +557,26 @@ function generateRefreshToken(user: any) {
 // Upload a profile picture
 app.post(
   "/api/files/upload/picture",
+  authenticateToken,
   uploadImages.single("file"),
-  async (req, res) => {
+  async (req: any, res: any) => {
     const file = req.file;
     const user = JSON.parse(req.body.user);
 
+    if (!file) {
+      return res.status(400).json({
+        status: "error",
+        message: "No file uploaded",
+      });
+    }
+
     try {
+      const oldFilePath = path.join(
+        __dirname,
+        "uploads/profile_pictures",
+        user.picture
+      );
+
       const userInsert = await db
         .update(AccountTable)
         .set({
@@ -592,6 +603,12 @@ app.post(
         accountId: user.accountId,
       });
 
+      fs.unlink(oldFilePath, (err: any) => {
+        if (err) {
+          console.log(err);
+        }
+      });
+
       res.status(201).json({
         status: "success",
         message: "File uploaded",
@@ -613,12 +630,19 @@ app.post(
 //Upload and create invoice
 app.post(
   "/api/files/upload/invoice",
+  authenticateToken,
   uploadFiles.single("file"),
-  async (req, res) => {
+  async (req: any, res: any) => {
     const file = req.file;
     const invoiceData = JSON.parse(req.body.invoiceData);
-
     const { accountId, expirationDate } = invoiceData;
+
+    if (!file) {
+      return res.status(400).json({
+        status: "error",
+        message: "No file uploaded",
+      });
+    }
 
     try {
       const invoice = await db.insert(InvoiceTable).values({
@@ -647,7 +671,7 @@ app.post(
 );
 
 //Get all invoices
-app.get("/api/uploads/files", async (req, res) => {
+app.get("/api/uploads/files", authenticateToken, async (req, res) => {
   try {
     const invoices = await db.query.InvoiceTable.findMany({
       orderBy: [asc(InvoiceTable.expirationDate)],
@@ -669,7 +693,7 @@ app.get("/api/uploads/files", async (req, res) => {
 });
 
 //Get all invoices of an user
-app.post("/api/uploads/files", async (req, res) => {
+app.post("/api/uploads/files", authenticateToken, async (req, res) => {
   const { accountId } = req.body;
   try {
     const invoices = await db.query.InvoiceTable.findMany({
@@ -693,7 +717,7 @@ app.post("/api/uploads/files", async (req, res) => {
 });
 
 //Update an invoice
-app.put("/api/invoices/:id", async (req, res) => {
+app.put("/api/invoices/:id", authenticateToken, async (req, res) => {
   const invoiceId = parseInt(req.params.id);
   const { state } = req.body;
 
@@ -723,7 +747,7 @@ app.put("/api/invoices/:id", async (req, res) => {
 });
 
 //Delete an invoice
-app.delete("/api/invoices/:id", async (req, res) => {
+app.delete("/api/invoices/:id", authenticateToken, async (req, res) => {
   const invoiceId = parseInt(req.params.id);
 
   try {
@@ -785,7 +809,7 @@ app.get("/api/download/:filename", authenticateToken, (req, res) => {
 });
 
 // Get all contact forms
-app.get("/api/contact", async (req, res) => {
+app.get("/api/contact", authenticateToken, async (req, res) => {
   try {
     const forms = await db.query.ContactFormTable.findMany({
       orderBy: [asc(ContactFormTable.createdAt)],

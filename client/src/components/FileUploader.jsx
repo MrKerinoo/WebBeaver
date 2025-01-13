@@ -2,11 +2,8 @@ import React, { useState } from "react";
 
 import { PhotoIcon } from "@heroicons/react/24/solid";
 import { uploadPicture } from "../api/fileApi";
-import { useAuth } from "../hooks/useAuth";
 
 export default function FileUploader({ setFile, types }) {
-  const { user } = useAuth();
-
   const states = {
     idle: "idle",
     loading: "loading",
@@ -15,7 +12,6 @@ export default function FileUploader({ setFile, types }) {
   };
 
   const [localFile, setLocalFile] = useState(null);
-  const [status, setStatus] = useState("idle");
 
   function handleFileChange(e) {
     if (e.target.files) {

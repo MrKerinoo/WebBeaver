@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import FileUploader from "../../components/FileUploader";
-import z from "zod";
+import z, { set } from "zod";
 import InputField from "../../components/InputField";
+import Modal from "../../components/Modal";
 import { useAuth } from "../../hooks/useAuth";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { updateProfile } from "../../api/userApi";
 import { uploadPicture } from "../../api/fileApi";
 
 export default function Profil() {
   const { user, setUser } = useAuth();
 
+  const [showModal, setShowModal] = useState(false);
   const [firstName, setFirstName] = useState(user.firstName || "");
   const [lastName, setLastName] = useState(user.lastName || "");
   const [email, setEmail] = useState(user.email || "");
@@ -37,12 +39,12 @@ export default function Profil() {
 
     email: z.string().email({ message: "Emailová adresa musí byť platná!" }),
 
-    phone: z.string().regex(/^\+?\d{10,12}$/, {
+    phone: z.string().regex(/^\+?\d{10,12}(\s?\d{1,})*$/, {
       message: "Telefónne číslo musí byť platné a obsahovať 10-12 číslic!",
     }),
 
-    iban: z.string().regex(/^SK\d{2}\s?(\d{4}\s?){6}$/, {
-      message: "IBAN musí byť v správnom formáte!",
+    iban: z.string().regex(/^SK\d{22}$/, {
+      message: "IBAN musí mať 24 čísiel a byť bez medzier!",
     }),
   });
 
@@ -89,6 +91,15 @@ export default function Profil() {
         email,
         phone,
         iban,
+      });
+
+      setShowModal(true);
+      setErrors({
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: "",
+        iban: "",
       });
     } catch (error) {
       console.error("Error submitting form:", error);
@@ -189,6 +200,12 @@ export default function Profil() {
           </div>
         </form>
       </div>
+
+      <Modal show={showModal} onClose={() => setShowModal(false)}>
+        <h1 className="text-center text-2xl text-white">
+          Profil bol úspešne aktualizovaný!
+        </h1>
+      </Modal>
     </div>
   );
 }

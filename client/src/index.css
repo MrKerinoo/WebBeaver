@@ -16,28 +16,6 @@ body {
   background-color: var(--primary);
 }
 
-/*
-padding: min(5em, 8%);
-
-rem - root element font-size
-font-size: clamp(1.8rem, 10vw + 1rem, 5rem);
-(10vw + 1rem) => supports zooming
-
-100dvh - also for mobile devices
-
-nav { 
-position: absolute;
-right: -16em;
-trainsition: right 200ms ease-in-out;
-}
-
-nav.show{
-right: 0;
-}
-
-?? set in JS -> inert - not clickable
-*/
-
 /*** HEADER ***/
 
 header {

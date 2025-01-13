@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   getUsers,
@@ -6,14 +6,11 @@ import {
   updateUser,
   deleteUser,
 } from "../../../api/userApi.js";
-import { useAuth } from "../../../hooks/useAuth.js";
 import { z } from "zod";
 
 import { MdClose } from "react-icons/md";
 
 export default function Pouzivatelia() {
-  //const { loggedIn, user } = useAuth();
-
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
