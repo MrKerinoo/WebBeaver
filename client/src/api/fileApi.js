@@ -38,7 +38,7 @@ export const uploadInvoice = async (fileData) => {
 
 export const getFiles = async (userData) => {
   try {
-    const response = await api.post(`${API_URL}/uploads/files`, userData);
+    const response = await api.post(`${API_URL}/files/invoice`, userData);
     return response.data;
   } catch (error) {
     throw error;
@@ -47,7 +47,7 @@ export const getFiles = async (userData) => {
 
 export const getInvoices = async () => {
   try {
-    const response = await api.get(`${API_URL}/uploads/files`);
+    const response = await api.get(`${API_URL}/files/invoice`);
     return response.data;
   } catch (error) {
     throw error;
@@ -56,7 +56,7 @@ export const getInvoices = async () => {
 
 export const updateInvoice = async (id, userData) => {
   try {
-    const response = await api.put(`${API_URL}/invoices/${id}`, userData);
+    const response = await api.put(`${API_URL}/files/invoice/${id}`, userData);
     return response.data;
   } catch (error) {
     throw error;
@@ -65,7 +65,7 @@ export const updateInvoice = async (id, userData) => {
 
 export const deleteInvoice = async (id) => {
   try {
-    const response = await api.delete(`${API_URL}/invoices/${id}`);
+    const response = await api.delete(`${API_URL}/files/invoice/${id}`);
     return response.data;
   } catch (error) {
     throw error;
