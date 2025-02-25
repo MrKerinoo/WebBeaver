@@ -3,7 +3,7 @@ import React from "react";
 import { getFiles } from "../../api/fileApi";
 import { useAuth } from "../../hooks/useAuth";
 
-export default function Pouzivatel() {
+export default function User() {
   const options = {
     year: "numeric",
     month: "long",

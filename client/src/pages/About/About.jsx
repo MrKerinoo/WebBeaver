@@ -5,7 +5,7 @@ import { HiOutlinePencil } from "react-icons/hi";
 import { HiOutlineUserGroup } from "react-icons/hi";
 import { HiOutlineSearch } from "react-icons/hi";
 
-export default function Onas() {
+export default function About() {
   const persons = [
     {
       id: 1,

@@ -10,7 +10,7 @@ import { z } from "zod";
 
 import { MdClose } from "react-icons/md";
 
-export default function Pouzivatelia() {
+export default function Users() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 

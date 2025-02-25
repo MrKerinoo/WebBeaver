@@ -11,7 +11,7 @@ import {
 import { getUsers } from "../../../api/userApi";
 import { MdClose } from "react-icons/md";
 
-export default function Faktury() {
+export default function Invoice() {
   const usersQuery = useQuery({
     queryKey: ["users"],
     queryFn: getUsers,

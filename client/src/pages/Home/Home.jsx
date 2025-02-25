@@ -8,7 +8,7 @@ import { HiOutlineDocumentText } from "react-icons/hi";
 import { HiOutlineBriefcase } from "react-icons/hi";
 import { HiOutlineSearch } from "react-icons/hi";
 
-export default function Domov() {
+export default function Home() {
   const services = [
     {
       id: 1,

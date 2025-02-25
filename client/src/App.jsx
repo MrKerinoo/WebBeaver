@@ -9,16 +9,15 @@ import LoadingSpiner from "./components/LoadingSpiner.jsx";
 import Header from "./layout/Header";
 import Footer from "./layout/Footer";
 
-import Domov from "./pages/Domov/Domov";
-import Kontakt from "./pages/Kontakt/Kontakt";
-import Onas from "./pages/Onas/Onas";
-
-import Prihlasenie from "./pages/Prihlasenie/Prihlasenie";
-import Profil from "./pages/Profil/Profil";
-import Faktury from "./pages/Admin/Faktury/Faktury.jsx";
-import Pouzivatelia from "./pages/Admin/Pouzivatelia/Pouzivatelia.jsx";
-import Pouzivatel from "./pages/Pouzivatel/Pouzivatel.jsx";
-import Formulare from "./pages/Admin/Formulare.jsx";
+import Home from "./pages/Home/Home";
+import Contact from "./pages/Contact/Contact.jsx";
+import About from "./pages/About/About.jsx";
+import Login from "./pages/Login/Login.jsx";
+import Users from "./pages/Admin/Users/Users.jsx";
+import Form from "./pages/Admin/Form.jsx";
+import User from "./pages/User/User.jsx";
+import Invoice from "./pages/Admin/Invoice/Invoice.jsx";
+import Profile from "./pages/Profile/Profile.jsx";
 
 const queryClient = new QueryClient();
 
@@ -45,16 +44,16 @@ export default function App() {
               <Header />
               <main className="flex-grow">
                 <Routes>
-                  <Route path="/" element={<Domov />} />
-                  <Route path="/kontakt" element={<Kontakt />} />
-                  <Route path="/onas" element={<Onas />} />
-                  <Route path="/prihlasenie" element={<Prihlasenie />} />
+                  <Route path="/" element={<Home />} />
+                  <Route path="/kontakt" element={<Contact />} />
+                  <Route path="/onas" element={<About />} />
+                  <Route path="/prihlasenie" element={<Login />} />
 
                   <Route
                     path="/pouzivatelia"
                     element={
                       <ProtectedRoute roles={["ADMIN"]}>
-                        <Pouzivatelia />
+                        <Users />
                       </ProtectedRoute>
                     }
                   />
@@ -63,7 +62,7 @@ export default function App() {
                     path="/formulare"
                     element={
                       <ProtectedRoute roles={["ADMIN"]}>
-                        <Formulare />
+                        <Form />
                       </ProtectedRoute>
                     }
                   />
@@ -72,7 +71,7 @@ export default function App() {
                     path="/pouzivatel"
                     element={
                       <ProtectedRoute roles={["USER"]}>
-                        <Pouzivatel />
+                        <User />
                       </ProtectedRoute>
                     }
                   />
@@ -81,7 +80,7 @@ export default function App() {
                     path="/faktury"
                     element={
                       <ProtectedRoute roles={["ADMIN"]}>
-                        <Faktury />
+                        <Invoice />
                       </ProtectedRoute>
                     }
                   />
@@ -90,7 +89,7 @@ export default function App() {
                     path="/profil"
                     element={
                       <ProtectedRoute roles={["ADMIN", "USER"]}>
-                        <Profil />
+                        <Profile />
                       </ProtectedRoute>
                     }
                   />

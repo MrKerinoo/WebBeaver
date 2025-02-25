@@ -8,7 +8,7 @@ import { useMutation } from "@tanstack/react-query";
 import { updateProfile } from "../../api/userApi";
 import { uploadPicture } from "../../api/fileApi";
 
-export default function Profil() {
+export default function Profile() {
   const { user, setUser } = useAuth();
 
   const [showModal, setShowModal] = useState(false);

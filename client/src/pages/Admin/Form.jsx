@@ -4,7 +4,7 @@ import React from "react";
 import { getContactForm } from "../../api/contactApi";
 import FormCard from "../../components/FormCard";
 
-export default function Formulare() {
+export default function Form() {
   const formsQuery = useQuery({
     queryKey: ["forms"],
     queryFn: getContactForm,

@@ -10,7 +10,7 @@ import { HiEyeOff } from "react-icons/hi";
 
 import { z } from "zod";
 
-export default function Prihlasenie() {
+export default function Login() {
   const { login } = useAuth();
 
   const [username, setUsername] = useState("");

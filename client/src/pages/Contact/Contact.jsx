@@ -6,7 +6,7 @@ import InputField from "/src/components/InputField";
 import { sendContactForm } from "/src/api/contactApi";
 import Modal from "/src/components/Modal";
 
-export default function Kontakt() {
+export default function Contact() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
